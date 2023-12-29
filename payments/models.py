@@ -93,7 +93,7 @@ class Payment(models.Model):
     tax = models.IntegerField(_("tax"), validators=[MinValueValidator(0)])
     total = models.IntegerField(_("total"), validators=[MinValueValidator(0)])
     status = models.CharField(
-        choices=PAYMENT_STATUS_CHOICES, default="pending"
+        choices=PAYMENT_STATUS_CHOICES, default="pending", max_length=30
     )
 
     def get_display_status(self):
