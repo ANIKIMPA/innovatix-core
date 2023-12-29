@@ -12,6 +12,18 @@ Detailed documentation is in the "docs" directory.
 - **Common Utilities:** Houses a collection of utility functions and classes that are frequently used throughout the application, promoting code reusability and efficiency.
 - **Settings and Configurations:** Centralizes important settings and configurations, making the application easily manageable and scalable.
 
+## Required Settings
+
+To ensure the proper functioning of the `core` app within your Django project, certain settings need to be configured:
+
+- **Custom User Model:** If you are using the custom user model provided by `core`, update your `AUTH_USER_MODEL` in your project's `settings.py` as follows:
+
+    ```python
+    AUTH_USER_MODEL = "users.ProgramUser"
+    ```
+
+    This setting is essential for utilizing the custom user model implemented in the `core` app.
+
 ## Usage
 
 The `core` app is designed to be intuitive and straightforward to use for developers. When creating new features or apps within the project, refer to the `core` app for reusable components and utilities. Ensure that any common functionality that could benefit other parts of the application is integrated into the `core` app to maintain consistency and avoid duplication.
@@ -22,21 +34,29 @@ As the backbone of our project, the `core` app is continuously evolving. Contrib
 
 ## Quick start
 
-1. Install the `core` app using pip::
+1. Install the `core` app using pip:
 
+    ```bash
     pip install git+https://github.com/ANIKIMPA/innovatix-core.git
+    ```
 
-2. Add "core" to your INSTALLED_APPS setting like this::
+2. Add "core" to your INSTALLED_APPS setting like this:
 
+    ```python
     INSTALLED_APPS = [
         ...,
         "core",
     ]
+    ```
 
-3. Include the core URLconf in your project urls.py like this::
+3. Include the core URLconf in your project urls.py like this:
 
+    ```python
     path("core/", include("core.urls")),
+    ```
 
-4. Run ``python manage.py migrate`` to create the core models.
+4. Update your project's `settings.py` with the required settings, especially the `AUTH_USER_MODEL`.
 
-5. Start the development server and visit http://127.0.0.1:8000/admin/ to create core models (you'll need the Admin app enabled).
+5. Run `python manage.py migrate` to create the core models.
+
+6. Start the development server and visit http://127.0.0.1:8000/admin/ to create core models (you'll need the Admin app enabled).
