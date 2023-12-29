@@ -1,19 +1,22 @@
 import logging
 
+from django.conf import settings
 from django.contrib.admin.options import get_content_type_for_model
+from django.contrib.auth import get_user_model
 
 from core.constants import SYSTEM_PROGRAM_USER_ID
-from users.models import ProgramUser
 
 logger = logging.getLogger("django")
 
 
 def get_system_user():
     try:
-        return ProgramUser.objects.get(pk=SYSTEM_PROGRAM_USER_ID)
-    except ProgramUser.DoesNotExist:
-        logger.warning("System ProgramUser does not exists.")
-        raise ProgramUser.DoesNotExist("System ProgramUser does not exists.")
+        return get_user_model().objects.get(pk=SYSTEM_PROGRAM_USER_ID)
+    except get_user_model().DoesNotExist:
+        logger.warning(f"System {settings.AUTH_USER_MODEL} does not exists.")
+        raise get_user_model().DoesNotExist(
+            f"System {settings.AUTH_USER_MODEL} does not exists."
+        )
 
 
 def log_creation(obj, message='[{"added": {}}]'):
