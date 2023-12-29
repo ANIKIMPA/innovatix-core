@@ -1,0 +1,8 @@
+<div class="readonly" {% include 'django/forms/widgets/attrs.html' %}>
+    <div>{{ widget.attrs.content }}</div>
+    {% if widget.help_text %}
+        <div class="help">
+            <div>{{ widget.help_text }}</div>
+        </div>
+    {% endif %}
+</div>

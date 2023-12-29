@@ -1,0 +1,26 @@
+{% load core_tags %}
+
+<div class="container px-5 my-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bolder text-danger">Membresías</h2>
+        <p class="lead mb-0">HAZTE SOCIO HOY DESDE $24.95 AL MES, REPRESENTACION LEGAL ESPECIALIZADA EN LA LEY 168</p>
+    </div>
+    <div class="row gx-5 justify-content-center">
+        
+        {% for membership in memberships %}
+            <div class="col-lg-6 col-xl-4">
+                <div class="card mb-5 mb-xl-0">
+                    <div class="card-body p-5">
+                        <div class="small text-uppercase fw-bold text-muted">{{membership.name}}</div>
+                        <div class="mb-3">
+                            <span class="fw-bold fs-xl-25rem fs-xxl-35rem">{{membership.get_recurring_price|dollar_format}}</span>
+                            <span class="text-muted">/ {{membership.recurring_payment}}</span>
+                        </div>
+                        <div class="membership-description mb-3">{{membership.short_description|safe}}</div>
+                        <div class="d-grid"><a class="btn btn-outline-danger" href="{% url 'products:membership-detail' membership.slug %}">Ver más</a></div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

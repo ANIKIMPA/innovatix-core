@@ -1,0 +1,7 @@
+*.pyc
+data/
+.env
+.vscode/
+staticfiles/
+dist/
+innovatix_core.egg-info

@@ -1,0 +1,93 @@
+{% extends 'prgunsite/base.html' %}
+
+{% load static %}
+
+{% block head %}
+    <script src="https://js.stripe.com/v3/"></script>
+    <title>{{membership.name}} - PR Gun</title>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center">
+        <h1>Configuremos su cuenta</h1>
+        <p>Estás a solo 60 segundos de unirte a nuestra membresía y obtener los beneficios de PR Gun Association.</p>
+    </div>
+    <form id="id_payment_form" method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <h3>Customer Information</h3>
+                <div class="row">
+                    <div class="col-sm-9 form-text">
+                        <p>{{user_info.email}}</p>
+                        <p>
+                            <span>{{user_info.first_name}} {{user_info.last_name}}</span>
+                            <br>
+                            <span>{{user_info.city}}, {{user_info.province.name}}, {{user_info.zip}}</span>
+                            <br>
+                            <span>{{user_info.country.name}}</span>
+                        </p>
+                    </div>
+                    <div class="col-sm-3">
+                        <a class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="{% url 'users:customer-info' membership.slug %}">Edit</a>
+                    </div>
+                </div>
+
+                <hr class="my-5">
+
+                <!-- Payment Information Form -->
+                <h2>Payment Information</h2>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="error-message" class="text-danger fst-italic mb-3">
+                            <!-- Display error message to your customers here -->
+                            {% if form.non_field_errors %}
+                                {{ form.non_field_errors.as_text }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {{ form.payment_method_id }}
+                    <div class="mb-4 col-lg-12">
+                        <div class="form-floating">
+                            {{form.card_name}}
+                            <label class="stripe-label" for="{{form.card_name.id_for_label}}">{{form.card_name.label}}</label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.card_name.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="payment-element">
+                        <!-- Elements will create form elements here -->
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-6">
+                {% include "products/includes/membership.html" %}
+
+                <div class="my-5">
+                    <div class="text-center">* * * * * * * *</div>
+                    <p class="form-text">By clicking "Make payment", you confirm that your subscription will automatically renew and your credit card will automatically be charged the subscription price according to the summary section of this page until you cancel your subscription. You also authorize Puerto Rico Gun Association to charge the supplied payment method, or another payment method on file, for the subscription price on each renewal. You can cancel your subscription at any time.</p>
+                    <div class="text-end">
+                        <button id="id_btn_submit" class="btn btn-danger" type="submit" disabled>Make payment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const subtotal = {{subtotal}}
+    const stripePublicKey = '{{pg_public_key}}'
+</script>
+<script src="{% static 'payments/js/checkout.js' %}?v=6"></script>
+{% endblock %}

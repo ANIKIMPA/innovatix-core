@@ -1,0 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+.container {
+    border-radius: 15px;
+    padding: 30px 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+.checkmark {
+    display: inline-block;
+    font-size: 40px;
+    color: green;
+    margin-right: 10px;
+}
+.subtext {
+    color: #888;
+    margin-bottom: 30px;
+}
+.message-box {
+    background-color: #f7f7f7;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+.message-box p {
+    margin: 0;
+    padding: 0;
+}
+.btns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.btn {
+    background-color: #eee;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.btn:hover {
+    background-color: #ddd;
+}

@@ -1,0 +1,103 @@
+<div class="container px-5 my-5 px-5">
+    <div class="text-center mb-5">
+        <div class="feature bg-danger bg-gradient text-white rounded-3 mb-3"><i class="bi bi-envelope"></i></div>
+        <h2 class="fw-bolder text-danger">Contáctanos</h2>
+        <p class="lead mb-0">
+            No dude en comunicarse con nosotros con cualquier pregunta, comentario o inquietud que pueda tener. Estamos aquí para ayudar y estaremos encantados de saber de usted. Nuestro horario de
+            atención es de 8:00 am a 10:00 pm. ¡Esperamos conectarnos con usted!
+        </p>
+    </div>
+    <div class="row gx-5 justify-content-center">
+        <div class="col-lg-6">
+            <form id="contactForm" action="{% url 'users:contact' %}" method="post">
+                {% csrf_token %}
+                <!-- Name input-->
+                <div class="form-floating mb-3">
+                    {{form.name}}
+                    <label for="{{form.name.id_for_label}}">{{form.name.label}} <span class="text-danger">*</span></label>
+                    <div class="text-danger fst-italic">
+                        <ul class="error-list">
+                            {% for error in form.name.errors %}
+                                <li>{{error}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <!-- Email address input-->
+                <div class="form-floating mb-3">
+                    {{form.email}}
+                    <label for="{{ form.email.id_for_label }}">{{form.email.label}} <span class="text-danger">*</span></label>
+                    <div class="text-danger fst-italic">
+                        <ul class="error-list">
+                            {% for error in form.email.errors %}
+                                <li>{{error}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <!-- Phone number input-->
+                <div class="form-floating mb-3">
+                    {{form.phone_number}}
+                    <label for="{{form.phone_number.id_for_label}}">{{form.phone_number.label}} <span class="text-danger">*</span></label>
+                    <div class="text-danger fst-italic">
+                        <ul class="error-list">
+                            {% for error in form.phone_number.errors %}
+                                <li>{{error}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <!-- Message input-->
+                <div class="form-floating mb-3">
+                    {{form.message}}
+                    <label for="{{form.message.id_for_label}}">{{form.message.label}} <span class="text-danger">*</span></label>
+                    <div class="text-danger fst-italic">
+                        <ul class="error-list">
+                            {% for error in form.message.errors %}
+                                <li>{{error}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="d-none" id="submitSuccessMessage">
+                    <div class="text-center mb-3">
+                        <div class="fw-bolder">Formulario enviado exitosamente!</div>
+                        To activate this form, sign up at
+                        <br />
+                        <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
+                    </div>
+                </div>
+                <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error enviando mensaje!</div></div>
+                <!-- Submit Button-->
+                <div class="d-grid">
+                    <button class="btn btn-danger btn-lg" id="submitButton" type="submit">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get all input elements
+    let inputs = document.querySelectorAll('#contactForm input, #contactForm textarea');
+    let button = document.querySelector('#submitButton');
+
+    // Function to enable or disable the button
+    const checkInputs = () => {
+        for (let i = 0; i < inputs.length; i++) {
+            if (inputs[i].value === '') {
+                button.disabled = true;
+                return; // If any field is empty, disable the button and exit
+            }
+        }
+        button.disabled = false; // If we made it here, all fields are filled, so enable the button
+    };
+
+    // Attach event listeners to input elements
+    inputs.forEach((input) => {
+        input.addEventListener('input', checkInputs);
+    });
+
+    // Initial check in case the form is autofilled
+    checkInputs();
+</script>

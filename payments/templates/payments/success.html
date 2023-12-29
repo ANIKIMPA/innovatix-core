@@ -1,0 +1,28 @@
+{% extends 'prgunsite/base.html' %}
+{% load static %}
+
+
+
+{% block head %}
+    <title>Payment Successful - PR Gun</title>
+{% endblock %}
+
+{% block content %}
+<section>
+    <h1>Payment Successful!</h1>
+    <div class="container my-5">
+        <h2><span class="checkmark"><div class="success-icon">✓</div></span>Thank you for your subscription.</h2>
+        <p class="subtext">Your membership details will be sent to your email shortly.</p>
+        <div class="message-box">
+            <p>Thank you for your membership.</p>
+            <p>Your benefits and next steps will be outlined in your welcome package.</p>
+        </div>
+        <div class="btns">
+            <button class="btn">Account</button>
+            <button class="btn">Homepage</button>
+        </div>
+    </div>
+</section>
+
+<script src="client.js" defer></script>
+{% endblock %}

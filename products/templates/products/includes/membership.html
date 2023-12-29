@@ -1,0 +1,20 @@
+{% load core_tags %}
+
+<div class="card shadow-lg">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="card-title">{{ membership.name }}</h1>
+                <h6 class="card-subtitle mb-2 text-muted">{{ membership.get_display_recurring_price }}</h6>
+                <div class="card-text membership-description">
+                    <p>{{ membership.short_description|safe }}</p>
+                </div>
+            </div>
+            <div class="col-md-12 text-end">
+                <p class="card-text">Pago por ingreso: {{ membership.get_display_entry_cost }}</p>
+                <hr>
+                <h6 class="card-subtitle mb-2">Total: {{subtotal|cents_to_dollars|dollar_format}}</h6>
+            </div>
+        </div>
+    </div>
+</div>

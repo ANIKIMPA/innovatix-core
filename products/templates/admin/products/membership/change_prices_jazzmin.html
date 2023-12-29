@@ -1,0 +1,148 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static jazzmin %}
+{% load admin_urls %}
+{% get_jazzmin_ui_tweaks as jazzmin_ui %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/select2/css/select2.min.css' %}">
+{% endblock %}
+
+{% block extrahead %}{{ block.super }}
+    <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} {{ opts.app_label }}-{{ opts.model_name }} change-form{% endblock %}
+{% if not is_popup %}
+    {% block breadcrumbs %}
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url opts|admin_urlname:'change' original.pk|admin_urlquote %}">{{ original|truncatewords:"18" }}</a></li>
+            <li class="breadcrumb-item active">{% trans 'Change prices' %}</li>
+        </ol>
+    {% endblock %}
+{% endif %}
+
+{% block content_title %} {% trans 'Change prices' %} {% endblock %}
+
+{% block content %}
+
+    <div class="col-12">
+        {% if form.errors %}
+            <div class="callout callout-danger">
+                {% if errors|length == 1 %}
+                    {% trans "Please correct the error below." %}
+                {% else %}
+                    {% trans "Please correct the errors below." %}
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <div class="card">
+            <div class="card-header with-border">
+                <h4 class="card-title">
+                    {% blocktrans with name=original %}Enter new prices for the membership <strong>{{ name }}</strong>.{% endblocktrans %}
+                </h4>
+            </div>
+
+            <div class="card-body">
+                <div id="content-main">
+                    <form action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">
+                        {% csrf_token %}
+                        {% block form_top %}{% endblock %}
+                        <input type="text" name="name" value="{{ original.name }}" style="display: none">
+                        <div>
+                            {% if is_popup %}<input type="hidden" name="_popup" value="1">{% endif %}
+
+                            <fieldset class="module aligned">
+                                <div class="row form-group">
+                                    <div class="col-12 col-md-2">
+                                        <label class="control-label float-md-right">
+                                            {{ form.entry_cost.field.label }}
+                                        </label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form.entry_cost }}
+                                        {% if form.entry_cost.help_text %}
+                                            <div class="help-block">{{ form.entry_cost.help_text|safe }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <div class="help-block text-red">
+                                            {{ form.entry_cost.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row form-group">
+                                    <div class="col-12 col-md-2">
+                                        <label class="control-label float-md-right">
+                                            {{ form.recurring_price.field.label }}
+                                        </label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form.recurring_price }}
+                                        {% if form.recurring_price.help_text %}
+                                            <div class="help-block">{{ form.recurring_price.help_text|safe }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <div class="help-block text-red">
+                                            {{ form.recurring_price.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row form-group">
+                                    <div class="col-12 col-md-2">
+                                        <label class="control-label float-md-right">
+                                            {{ form.recurring_payment.field.label }}
+                                        </label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form.recurring_payment }}
+                                        {% if form.recurring_payment.help_text %}
+                                            <div class="help-block">{{ form.recurring_payment.help_text|safe }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <div class="help-block text-red">
+                                            {{ form.recurring_payment.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                            <div class="row">
+                                <div class="submit-row col-md-12 col-md-push-2">
+                                    <input type="submit" value="{% trans 'Change prices' %}" class="btn {{ jazzmin_ui.button_classes.primary }} float-right">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extrajs %}
+    {{  block.super }}
+    <script type="text/javascript" src="{% static 'vendor/select2/js/select2.min.js' %}"></script>
+    <script type="text/javascript">
+        function applySelect2() {
+            // Apply select2 to any select boxes that don't yet have it
+            // and are not part of the django's empty-form inline
+            const noSelect2 = '.empty-form select, .select2-hidden-accessible, .selectfilter, .selector-available select, .selector-chosen select, select[data-autocomplete-light-function=select2]';
+            $('select').not(noSelect2).select2({ width: 'element' });
+        }
+
+        applySelect2();
+    </script>
+    <script>
+        $('[required]').before('<span class="text-red" style="margin-left: -10px;">* </span>');
+    </script>
+{% endblock %}

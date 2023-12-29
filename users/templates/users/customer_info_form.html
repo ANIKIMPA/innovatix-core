@@ -1,0 +1,186 @@
+{% extends 'prgunsite/base.html' %}
+
+{% block head %}
+    <title>{{membership.name}} - PR Gun</title>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center">
+        <h1>Configuremos su cuenta</h1>
+        <p>Estás a solo 90 segundos de unirte a nuestra membresía y obtener los beneficios de PR Gun Association.</p>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <!-- User Information Form -->
+                <h2>User Information</h2>
+                <div class="row">
+                    <div class="mb-4 col-lg-12">
+                        <div class="form-floating">
+                            {{form.email}}
+                            <label for="{{ form.email.id_for_label }}">{{form.email.label}} <span class="text-danger">*</span></label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.email.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4 col-sm-6">
+                        <div class="form-floating">
+                            {{form.phone_number}}
+                            <label for="{{form.phone_number.id_for_label}}">{{form.phone_number.label}} <span class="text-danger">*</span></label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.phone_number.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4 col-sm-6">
+                        <div class="form-floating">
+                            {{form.country}}
+                            <label for="{{form.country.id_for_label}}">{{form.country.label}} <span class="text-danger">*</span></label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.country.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4 col-sm-6">
+                        <div class="form-floating">
+                            {{form.first_name}}
+                            <label for="{{form.first_name.id_for_label}}">{{form.first_name.label}} <span class="text-danger">*</span></label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.first_name.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4 col-sm-6">
+                        <div class="form-floating">
+                            {{form.last_name}}
+                            <label for="{{form.last_name.id_for_label}}">{{form.last_name.label}} <span class="text-danger">*</span></label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.last_name.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4 col-sm-6">
+                        <div class="form-floating">
+                            {{form.address1}}
+                            <label for="{{form.address1.id_for_label}}">{{form.address1.label}} <span class="text-danger">*</span></label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.address1.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4 col-sm-6">
+                        <div class="form-floating">
+                            {{form.address2}}
+                            <label for="{{form.address2.id_for_label}}">{{form.address2.label}}</label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.address2.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4 col-sm-6">
+                        <div class="form-floating">
+                            {{form.company}}
+                            <label for="{{form.company.id_for_label}}">{{form.company.label}}</label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.company.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4 col-sm-6">
+                        <div class="form-floating">
+                            {{form.city}}
+                            <label for="{{form.city.id_for_label}}">{{form.city.label}} <span class="text-danger">*</span></label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.city.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4 col-sm-6">
+                        <div class="form-floating">
+                            {{form.province}}
+                            <label for="{{form.province.id_for_label}}">{{form.province.label}} <span class="text-danger">*</span></label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.province.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4 col-sm-6">
+                        <div class="form-floating">
+                            {{form.zip}}
+                            <label for="{{form.zip.id_for_label}}">{{form.zip.label}} <span class="text-danger">*</span></label>
+                            <div class="text-danger fst-italic">
+                                <ul class="error-list">
+                                    {% for error in form.zip.errors %}
+                                        <li>{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                {% include "products/includes/membership.html" %}
+
+                <div class="text-end my-5">
+                    {{form.accept_terms_condition}}
+                    <label class="form-check-label" for="{{form.accept_terms_condition.id_for_label}}">
+                        I agree to the <a href="" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Terms and Conditions</a> <span class="text-danger">*</span>
+                    </label>
+                    <div class="text-danger fst-italic">
+                        <ul class="error-list">
+                            {% for error in form.accept_terms_condition.errors %}
+                                <li>{{error}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <button class="btn btn-danger mt-3" type="submit">Continuar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

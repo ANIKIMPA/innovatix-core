@@ -1,0 +1,12 @@
+include LICENSE
+include README.rst
+recursive-include core/static *
+recursive-include core/templates *
+recursive-include geo_territories/static *
+recursive-include geo_territories/templates *
+recursive-include payments/static *
+recursive-include payments/templates *
+recursive-include products/static *
+recursive-include products/templates *
+recursive-include users/static *
+recursive-include users/templates *

@@ -1,0 +1,78 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+{% load core_tags %}
+
+
+{% block extrahead %}
+{{ block.super }}
+<script src="{% url 'admin:jsi18n' %}"></script>
+{{ media }}
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-form{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label='products' %}">{% trans 'Products' %}</a>
+&rsaquo; <a href="{% url 'admin:products_usermembership_changelist' %}">{% trans item.verbose_name_plural|capfirst  %}</a>
+&rsaquo; {{title}}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block content %}
+<h2>{{item.verbose_name_plural|capfirst }} ({{queryset.count}}):</h2>
+<form action="" method="post">
+    {% csrf_token %}
+    <div class="inline-group">
+        <div class="submit-row">
+            <ul>
+                {% for item in queryset %}
+                <li>{{ item }}</li>
+                <input type="hidden" name="_selected_action" value="{{ item.pk }}" />
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="form-row">
+        <p>{{help_text|safe}}</p>
+    </div>
+    <div>
+        <fieldset class="module aligned">
+            {% for field in form %}                
+                {{field.field.widget.type}}
+                <div class="form-row {% if field.errors %}errors{% endif %} field-{{field.name}}">
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                                <li>{{error}}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <div>
+                        <div class="flex-container">
+                            <label class="required" for="{{field.id_for_label}}">{{field.label}}:</label>
+                            {{field}}
+                        </div>
+                        {% if field.help_text %}
+                            <div id="{{field.auto_id}}_helptext" class="help">
+                                <div>{{field.help_text}}</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </fieldset>
+        <input type="hidden" name="action" value="{{action}}" />
+        <div class="submit-row">
+            <input class="default" type="submit" name="apply" value="Update"/>
+        </div>
+    </div>
+</form>
+{% endblock %}
