@@ -59,4 +59,6 @@ As the backbone of our project, the `core` app is continuously evolving. Contrib
 
 5. Run `python manage.py migrate` to create the core models.
 
-6. Start the development server and visit http://127.0.0.1:8000/admin/ to create core models (you'll need the Admin app enabled).
+6. Load the initial data to the database with `python manage.py loaddata initial.json`.
+
+7. Start the development server and visit http://127.0.0.1:8000/admin/ to create core models (you'll need the Admin app enabled).
