@@ -3,12 +3,15 @@ from unittest.mock import Mock, patch
 from django.test import Client
 from django.urls import reverse
 
-from core.tests import BaseTestCase
-from geo_territories.utils import get_default_country, get_default_province
+from innovatix.core.tests import BaseTestCase
+from innovatix.geo_territories.utils import get_default_country, get_default_province
+from innovatix.users.utils import (
+    create_fake_customer_user,
+    get_user_info_fake_session_data,
+)
 from payments.constants import SUCCEEDED
 from payments.utils import create_fake_payment, create_fake_payment_method
 from products.tests import create_fake_membership, create_fake_subscription
-from users.utils import create_fake_customer_user, get_user_info_fake_session_data
 
 
 class PaymentMethodModelTest(BaseTestCase):
@@ -102,11 +105,11 @@ class PaymentInfoPageViewTest(BaseTestCase):
         return response
 
     @patch(
-        "core.services.payment_gateway.create_customer",
+        "products.services.payment_gateway.create_customer",
         return_value=Mock(id="customer_id"),
     )
     @patch(
-        "core.services.payment_gateway.create_confirm_subscription",
+        "products.services.payment_gateway.create_confirm_subscription",
         return_value={"code": SUCCEEDED},
     )
     def test_valid_response(
@@ -120,11 +123,11 @@ class PaymentInfoPageViewTest(BaseTestCase):
         )
 
     @patch(
-        "core.services.payment_gateway.create_customer",
+        "products.services.payment_gateway.create_customer",
         return_value=Mock(id="customer_id"),
     )
     @patch(
-        "core.services.payment_gateway.create_confirm_subscription",
+        "products.services.payment_gateway.create_confirm_subscription",
         return_value={"code": "error", "error": {"message": "Test error message"}},
     )
     def test_invalid_response(
@@ -136,23 +139,23 @@ class PaymentInfoPageViewTest(BaseTestCase):
         self.assertContains(response, "Test error message")
 
     @patch(
-        "core.services.payment_gateway.create_customer",
+        "products.services.payment_gateway.create_customer",
         return_value=Mock(id="customer_id"),
     )
     @patch(
-        "core.services.payment_gateway.create_confirm_subscription",
+        "products.services.payment_gateway.create_confirm_subscription",
         return_value={"code": SUCCEEDED},
     )
-    @patch("payments.views.CustomerUserForm")
+    @patch("payments.views.CoreCustomerUserForm")
     def test_invalid_user_info_redirects(
         self,
-        MockCustomerUserForm,
+        MockCoreCustomerUserForm,
         mock_create_confirm_subscription,
         mock_create_customer,
     ):
         mock_form_instance = Mock()
         mock_form_instance.is_valid.return_value = False
-        MockCustomerUserForm.return_value = mock_form_instance
+        MockCoreCustomerUserForm.return_value = mock_form_instance
 
         form_data = {
             "card_name": "Test Example",

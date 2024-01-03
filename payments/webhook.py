@@ -1,8 +1,8 @@
 import logging
 
+from innovatix.users.models import CustomerUser
 from payments.models import Payment, PaymentMethod
 from products.models import UserMembership
-from users.models import CustomerUser
 
 logger = logging.getLogger("django")
 

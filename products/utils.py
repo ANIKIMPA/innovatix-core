@@ -1,7 +1,7 @@
 from typing import Any
 
+from innovatix.users.models import CustomerUser
 from products.models import Membership, UserMembership
-from users.models import CustomerUser
 
 
 def create_membership(**kwargs: Any) -> Membership:

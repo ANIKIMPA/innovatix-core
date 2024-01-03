@@ -4,7 +4,6 @@ from django import forms
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 
-from core.services import payment_gateway
 from products.constants import (
     ENTRY_COST_HELP_TEXT,
     RECURRING_INTERVAL_CHOICES,
@@ -12,6 +11,7 @@ from products.constants import (
     RECURRING_PRICE_HELP_TEXT,
 )
 from products.models import Membership
+from products.services import payment_gateway
 
 
 class MembershipBaseForm(forms.ModelForm):

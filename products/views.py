@@ -2,10 +2,12 @@ from typing import Any
 
 from django.db.models.query import QuerySet
 from django.http import Http404
+from django.urls import reverse_lazy
 from django.views.generic import DetailView
 from django.views.generic.edit import FormView
 
-from core.views import CoreListView
+from innovatix.core.views import CoreListView
+from innovatix.users.forms import CoreCustomerUserForm
 from products.models import Membership
 
 
@@ -31,6 +33,32 @@ class MembershipInfoView(FormView):
             }
         )
         return context
+
+
+class CustomerInfoFormView(MembershipInfoView):
+    form_class = CoreCustomerUserForm
+    template_name = "users/customer_info_form.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+
+        # Check if form data is in session
+        if "user_info" in self.request.session:
+            # Use session data to pre-populate form
+            kwargs["initial"] = self.request.session["user_info"]
+
+        return kwargs
+
+    def get_success_url(self):
+        # reverse_lazy with dynamic URL part
+        return reverse_lazy(
+            "payments:payment-info", kwargs={"slug": self.membership.slug}
+        )
+
+    def form_valid(self, form: CoreCustomerUserForm):
+        self.request.session["user_info"] = form.cleaned_data_with_model_pk()
+
+        return super().form_valid(form)
 
 
 class MembershipDetailView(DetailView):

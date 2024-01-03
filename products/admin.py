@@ -20,8 +20,7 @@ from django.utils.translation import ngettext
 from django.views.decorators.debug import sensitive_post_parameters
 from django_summernote.admin import SummernoteModelAdmin
 
-from core.admin import CoreAdmin
-from core.services import payment_gateway
+from innovatix.core.admin import CoreAdmin
 from payments.admin import PaymentInline
 from products.constants import ENTRY_COST_HELP_TEXT, RECURRING_PRICE_HELP_TEXT
 from products.forms import (
@@ -31,6 +30,7 @@ from products.forms import (
     UpdateSubscriptionPriceForm,
 )
 from products.models import Membership, UserMembership
+from products.services import payment_gateway
 
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 
