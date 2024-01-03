@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name="user",
             field=models.OneToOneField(
                 on_delete=django.db.models.deletion.CASCADE,
-                to="innovatix.users.customeruser",
+                to="users.customeruser",
                 verbose_name="customer",
             ),
         ),
