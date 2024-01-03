@@ -1,6 +1,6 @@
-# Core
+# innovatix-core
 
-The `core` app is the central hub of our Django project, designed to encapsulate the fundamental functionalities essential for the operation of the entire website. It acts as a foundational template, enabling the seamless integration and reuse of common features across various components of the application. By centralizing critical functionalities in the `core` app, we ensure consistency, reduce redundancy, and maintain a DRY (Don't Repeat Yourself) codebase.
+The `innovatix` app is the central hub of our Django project, designed to encapsulate the fundamental functionalities essential for the operation of the entire website. It acts as a foundational template, enabling the seamless integration and reuse of common features across various components of the application. By centralizing critical functionalities in the `innovatix` app, we ensure consistency, reduce redundancy, and maintain a DRY (Don't Repeat Yourself) codebase.
 
 Detailed documentation is in the "docs" directory.
 
@@ -14,27 +14,27 @@ Detailed documentation is in the "docs" directory.
 
 ## Required Settings
 
-To ensure the proper functioning of the `core` app within your Django project, certain settings need to be configured:
+To ensure the proper functioning of the `innovatix` app within your Django project, certain settings need to be configured:
 
-- **Custom User Model:** If you are using the custom user model provided by `core`, update your `AUTH_USER_MODEL` in your project's `settings.py` as follows:
+- **Custom User Model:** If you are using the custom user model provided by `innovatix`, update your `AUTH_USER_MODEL` in your project's `settings.py` as follows:
 
     ```python
-    AUTH_USER_MODEL = "users.ProgramUser"
+    AUTH_USER_MODEL = "innovatix.users.ProgramUser"
     ```
 
-    This setting is essential for utilizing the custom user model implemented in the `core` app.
+    This setting is essential for utilizing the custom user model implemented in the `innovatix` app.
 
 ## Usage
 
-The `core` app is designed to be intuitive and straightforward to use for developers. When creating new features or apps within the project, refer to the `core` app for reusable components and utilities. Ensure that any common functionality that could benefit other parts of the application is integrated into the `core` app to maintain consistency and avoid duplication.
+The `innovatix` app is designed to be intuitive and straightforward to use for developers. When creating new features or apps within the project, refer to the `innovatix` app for reusable components and utilities. Ensure that any common functionality that could benefit other parts of the application is integrated into the `innovatix` app to maintain consistency and avoid duplication.
 
 ## Contribution
 
-As the backbone of our project, the `core` app is continuously evolving. Contributions that enhance its functionality, improve efficiency, or introduce beneficial features are always welcome. Please follow the project's contribution guidelines when proposing changes or additions to the `core` app.
+As the backbone of our project, the `innovatix` app is continuously evolving. Contributions that enhance its functionality, improve efficiency, or introduce beneficial features are always welcome. Please follow the project's contribution guidelines when proposing changes or additions to the `innovatix` app.
 
 ## Quick start
 
-1. Install the `core` app using pip:
+1. Install the `innovatix` app using pip:
 
     ```bash
     pip install git+https://github.com/ANIKIMPA/innovatix-core.git
@@ -45,14 +45,18 @@ As the backbone of our project, the `core` app is continuously evolving. Contrib
     ```python
     INSTALLED_APPS = [
         ...,
-        "core",
+        "innovatix.core.apps.CoreConfig",
+        "innovatix.users.apps.UsersConfig",
+        "innovatix.geo_territories.apps.GeoTerritoriesConfig",
     ]
     ```
 
 3. Include the core URLconf in your project urls.py like this:
 
     ```python
-    path("core/", include("core.urls")),
+    path("core/", include("innovatix.core.urls")),
+    path("users/", include("innovatix.users.urls")),
+    path("geo_territories/", include("innovatix.geo_territories.urls")),
     ```
 
 4. Update your project's `settings.py` with the required settings, especially the `AUTH_USER_MODEL`.

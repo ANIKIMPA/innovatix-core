@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import Any
 
+from innovatix.users.models import CustomerUser
 from payments.models import Payment, PaymentMethod
 from products.models import UserMembership
-from users.models import CustomerUser
 
 
 def create_payment_method(user: CustomerUser, **kwargs: Any) -> PaymentMethod:

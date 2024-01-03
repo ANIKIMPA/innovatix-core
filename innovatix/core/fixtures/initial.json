@@ -1,0 +1,975 @@
+[
+    {
+        "model": "geo_territories.country",
+        "pk": 1,
+        "fields": {
+            "name": "United States",
+            "code": "US",
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "users.programuser",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$CuQXuqk6bu5T7pGfj6l578$E/YD6Q8X0uKiMhrJaC6C0XA4yB+aihxzv6Y+TVrZFq4=",
+            "last_login": null,
+            "is_superuser": false,
+            "email": "innovatix@digital.com",
+            "first_name": "System",
+            "last_name": "(Innovatix Digital)",
+            "phone_number": "",
+            "is_active": true,
+            "date_joined": "2023-08-05T05:03:27.134Z",
+            "is_staff": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 1,
+        "fields": {
+            "name": "Alabama",
+            "code": "AL",
+            "capital": "Montgomery",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 2,
+        "fields": {
+            "name": "Alaska",
+            "code": "AK",
+            "capital": "Juneau",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 3,
+        "fields": {
+            "name": "Arizona",
+            "code": "AZ",
+            "capital": "Phoenix",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 4,
+        "fields": {
+            "name": "Arkansas",
+            "code": "AR",
+            "capital": "Little Rock",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 5,
+        "fields": {
+            "name": "California",
+            "code": "CA",
+            "capital": "Sacramento",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 6,
+        "fields": {
+            "name": "Colorado",
+            "code": "CO",
+            "capital": "Denver",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 7,
+        "fields": {
+            "name": "Connecticut",
+            "code": "CT",
+            "capital": "Hartford",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 8,
+        "fields": {
+            "name": "Delaware",
+            "code": "DE",
+            "capital": "Dover",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 9,
+        "fields": {
+            "name": "Florida",
+            "code": "FL",
+            "capital": "Tallahassee",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 10,
+        "fields": {
+            "name": "Georgia",
+            "code": "GA",
+            "capital": "Atlanta",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 11,
+        "fields": {
+            "name": "Hawaii",
+            "code": "HI",
+            "capital": "Honolulu",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 12,
+        "fields": {
+            "name": "Idaho",
+            "code": "ID",
+            "capital": "Boise",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 13,
+        "fields": {
+            "name": "Illinois",
+            "code": "IL",
+            "capital": "Springfield",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 14,
+        "fields": {
+            "name": "Indiana",
+            "code": "IN",
+            "capital": "Indianapolis",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 15,
+        "fields": {
+            "name": "Iowa",
+            "code": "IA",
+            "capital": "Des Moines",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 16,
+        "fields": {
+            "name": "Kansas",
+            "code": "KS",
+            "capital": "Topeka",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 17,
+        "fields": {
+            "name": "Kentucky[E]",
+            "code": "KY",
+            "capital": "Frankfort",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 18,
+        "fields": {
+            "name": "Louisiana",
+            "code": "LA",
+            "capital": "Baton Rouge",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 19,
+        "fields": {
+            "name": "Maine",
+            "code": "ME",
+            "capital": "Augusta",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 20,
+        "fields": {
+            "name": "Maryland",
+            "code": "MD",
+            "capital": "Annapolis",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 21,
+        "fields": {
+            "name": "Massachusetts[E]",
+            "code": "MA",
+            "capital": "Boston",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 22,
+        "fields": {
+            "name": "Michigan",
+            "code": "MI",
+            "capital": "Lansing",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 23,
+        "fields": {
+            "name": "Minnesota",
+            "code": "MN",
+            "capital": "St. Paul",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 24,
+        "fields": {
+            "name": "Mississippi",
+            "code": "MS",
+            "capital": "Jackson",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 25,
+        "fields": {
+            "name": "Missouri",
+            "code": "MO",
+            "capital": "Jefferson City",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 26,
+        "fields": {
+            "name": "Montana",
+            "code": "MT",
+            "capital": "Helena",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 27,
+        "fields": {
+            "name": "Nebraska",
+            "code": "NE",
+            "capital": "Lincoln",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 28,
+        "fields": {
+            "name": "Nevada",
+            "code": "NV",
+            "capital": "Carson City",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 29,
+        "fields": {
+            "name": "New Hampshire",
+            "code": "NH",
+            "capital": "Concord",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 30,
+        "fields": {
+            "name": "New Jersey",
+            "code": "NJ",
+            "capital": "Trenton",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 31,
+        "fields": {
+            "name": "New Mexico",
+            "code": "NM",
+            "capital": "Santa Fe",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 32,
+        "fields": {
+            "name": "New York",
+            "code": "NY",
+            "capital": "Albany",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 33,
+        "fields": {
+            "name": "North Carolina",
+            "code": "NC",
+            "capital": "Raleigh",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 34,
+        "fields": {
+            "name": "North Dakota",
+            "code": "ND",
+            "capital": "Bismarck",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 35,
+        "fields": {
+            "name": "Ohio",
+            "code": "OH",
+            "capital": "Columbus",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 36,
+        "fields": {
+            "name": "Oklahoma",
+            "code": "OK",
+            "capital": "Oklahoma City",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 37,
+        "fields": {
+            "name": "Oregon",
+            "code": "OR",
+            "capital": "Salem",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 38,
+        "fields": {
+            "name": "Pennsylvania[E]",
+            "code": "PA",
+            "capital": "Harrisburg",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 39,
+        "fields": {
+            "name": "Rhode Island[F]",
+            "code": "RI",
+            "capital": "Providence",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 40,
+        "fields": {
+            "name": "South Carolina",
+            "code": "SC",
+            "capital": "Columbia",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 41,
+        "fields": {
+            "name": "South Dakota",
+            "code": "SD",
+            "capital": "Pierre",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 42,
+        "fields": {
+            "name": "Tennessee",
+            "code": "TN",
+            "capital": "Nashville",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 43,
+        "fields": {
+            "name": "Texas",
+            "code": "TX",
+            "capital": "Austin",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 44,
+        "fields": {
+            "name": "Utah",
+            "code": "UT",
+            "capital": "Salt Lake City",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 45,
+        "fields": {
+            "name": "Vermont",
+            "code": "VT",
+            "capital": "Montpelier",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 46,
+        "fields": {
+            "name": "Virginia[E]",
+            "code": "VA",
+            "capital": "Richmond",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 47,
+        "fields": {
+            "name": "Washington",
+            "code": "WA",
+            "capital": "Olympia",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 48,
+        "fields": {
+            "name": "West Virginia",
+            "code": "WV",
+            "capital": "Charleston",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 49,
+        "fields": {
+            "name": "Wisconsin",
+            "code": "WI",
+            "capital": "Madison",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 50,
+        "fields": {
+            "name": "Wyoming",
+            "code": "WY",
+            "capital": "Cheyenne",
+            "type": "State",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 51,
+        "fields": {
+            "name": "District of Columbia",
+            "code": "DC",
+            "capital": "",
+            "type": "Federal District",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 52,
+        "fields": {
+            "name": "American Samoa",
+            "code": "AS",
+            "capital": "Pago Pago",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 53,
+        "fields": {
+            "name": "Guam",
+            "code": "GU",
+            "capital": "Hagåtña",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 54,
+        "fields": {
+            "name": "Northern Mariana Islands",
+            "code": "MP",
+            "capital": "Saipan",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 55,
+        "fields": {
+            "name": "Puerto Rico",
+            "code": "PR",
+            "capital": "San Juan",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 56,
+        "fields": {
+            "name": "U.S. Virgin Islands",
+            "code": "VI",
+            "capital": "Charlotte Amalie",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 57,
+        "fields": {
+            "name": "Baker Island",
+            "code": "",
+            "capital": "",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 58,
+        "fields": {
+            "name": "Howland Island",
+            "code": "",
+            "capital": "",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 59,
+        "fields": {
+            "name": "Jarvis Island",
+            "code": "",
+            "capital": "",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 60,
+        "fields": {
+            "name": "Johnston Atoll",
+            "code": "",
+            "capital": "",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 61,
+        "fields": {
+            "name": "Kingman Reef",
+            "code": "",
+            "capital": "",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 62,
+        "fields": {
+            "name": "Midway Atoll",
+            "code": "",
+            "capital": "",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 63,
+        "fields": {
+            "name": "Navassa Island",
+            "code": "",
+            "capital": "",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 64,
+        "fields": {
+            "name": "Palmyra Atoll",
+            "code": "",
+            "capital": "",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "geo_territories.province",
+        "pk": 65,
+        "fields": {
+            "name": "Wake Island",
+            "code": "",
+            "capital": "",
+            "type": "Territory",
+            "country": 1,
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "users.tag",
+        "pk": 1,
+        "fields": {
+            "text": "Active Subscriber",
+            "description": "User who is currently subscribed and actively engages with our services or content. This could include regular usage of our platform, frequent interaction with our content, or consistent participation in our community. The tag is a recognition of their ongoing commitment and engagement.",
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "users.tag",
+        "pk": 2,
+        "fields": {
+            "text": "Inactive Subscriber",
+            "description": "User who, despite being subscribed to our services or content, does not actively engage or participate. This could be due to infrequent usage of our platform, lack of interaction with our content, or minimal participation in our community. The tag helps identify customers who may need re-engagement strategies or additional support to maximize their subscription benefits.",
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "users.tag",
+        "pk": 3,
+        "fields": {
+            "text": "Subscription card declined",
+            "description": "User whose payment method, specifically their card, has been declined during the subscription billing process. This could be due to various reasons such as insufficient funds, expired card, or a bank error. The tag serves as a flag for customer service to reach out and assist the user in updating their payment information to continue their subscription seamlessly.",
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "users.tag",
+        "pk": 4,
+        "fields": {
+            "text": "Prospect",
+            "description": "Potential customer who has shown interest in our services or products but has not yet made a purchase or subscription. This could be someone who has visited our website, signed up for a newsletter, or engaged with our content. The tag helps in identifying these potential customers for targeted marketing efforts, personalized communication, and conversion strategies.",
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "users.tag",
+        "pk": 5,
+        "fields": {
+            "text": "Legal Consultation Subscriber",
+            "description": "For members who frequently use your legal consultation services. This helps identify your active users and tailor your services to their needs.",
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "users.tag",
+        "pk": 6,
+        "fields": {
+            "text": "Course Participant",
+            "description": "For members who have enrolled in your special training courses. This helps track who is actively seeking to improve their skills and knowledge.",
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "users.tag",
+        "pk": 7,
+        "fields": {
+            "text": "Premium Member",
+            "description": "For members who subscribe to a higher tier of membership. This helps identify your most invested members and can guide your strategy for retaining them and upgrading others.",
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "users.tag",
+        "pk": 8,
+        "fields": {
+            "text": "Referral Source",
+            "description": "For members who frequently refer other people to your services. This helps identify your brand advocates and can inform your referral marketing strategies.",
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "users.tag",
+        "pk": 9,
+        "fields": {
+            "text": "Feedback Contributor",
+            "description": "For members who frequently provide feedback or suggestions. This helps identify members who are engaged and invested in the improvement of your services.",
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    },
+    {
+        "model": "users.tag",
+        "pk": 10,
+        "fields": {
+            "text": "Bilingual Member",
+            "description": " For members who prefer to receive communication in both English and Spanish. This helps ensure you're communicating with these members in the most effective way possible.",
+            "created_at": "2023-07-16T19:37:25.504Z",
+            "updated_at": null
+        }
+    }
+]

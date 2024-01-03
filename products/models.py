@@ -8,12 +8,12 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from core.services import payment_gateway
-from core.templatetags.core_tags import dollar_format
+from innovatix.core.templatetags.core_tags import dollar_format
 from products.constants import (
     RECURRING_INTERVAL_CHOICES,
     RECURRING_PAYMENT_INTERVAL_HELP_TEXT,
 )
+from products.services import payment_gateway
 
 
 class Membership(models.Model):
@@ -104,7 +104,9 @@ class UserMembership(models.Model):
         _("stripe ID"), max_length=50, blank=True
     )
     user = models.OneToOneField(
-        "users.CustomerUser", verbose_name=_("customer"), on_delete=models.CASCADE
+        "users.CustomerUser",
+        verbose_name=_("customer"),
+        on_delete=models.CASCADE,
     )
     membership = models.ForeignKey("Membership", on_delete=models.PROTECT)
     date_subscribed = models.DateTimeField(default=timezone.now)

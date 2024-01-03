@@ -4,7 +4,7 @@ from django import forms
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 
-from core.forms import CoreModelForm
+from innovatix.core.forms import CoreModelForm
 from payments.models import Payment, PaymentMethod
 
 

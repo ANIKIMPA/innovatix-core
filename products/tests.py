@@ -5,13 +5,18 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.test import TestCase
+from django.urls import reverse, reverse_lazy
 
-from core.tests import BaseTestCase
-from geo_territories.utils import get_default_country, get_default_province
+from innovatix.core.tests import BaseTestCase
+from innovatix.geo_territories.utils import get_default_country, get_default_province
+from innovatix.users.utils import (
+    create_fake_customer_user,
+    get_user_info_fake_session_data,
+)
 from products.admin import UserMembershipAdmin
 from products.models import UserMembership
+from products.tests import create_fake_membership
 from products.utils import create_fake_membership, create_fake_subscription
-from users.utils import create_fake_customer_user
 
 
 class MembershipModelTest(TestCase):
@@ -97,7 +102,7 @@ class UserMembershipAdminTestCase(BaseTestCase):
     def test_has_change_permission(self):
         self.assertFalse(self.admin.has_change_permission(request))
 
-    @patch("core.services.payment_gateway.update_subscription")
+    @patch("products.services.payment_gateway.update_subscription")
     def test_update_price(self, mock_update_subscription):
         mock_update_subscription.return_value = {
             "object": "subscription",
@@ -131,3 +136,40 @@ class UserMembershipAdminTestCase(BaseTestCase):
             self.subscription2.get_recurring_price(), 30.00
         )  # New price in dollars
         self.assertEqual(self.subscription2.recurring_payment, "year")  # New interval
+
+
+class CustomerInfoPageViewTest(BaseTestCase):
+    def setUp(self):
+        self.membership = create_fake_membership()
+        self.url = reverse("users:customer-info", kwargs={"slug": self.membership.slug})
+
+    def test_page_loads(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "users/customer_info_form.html")
+
+    def test_form_prepopulated_with_session_data(self):
+        session = self.client.session
+        session["user_info"] = {"first_name": "John", "last_name": "Doe"}
+        session.save()
+
+        response = self.client.get(self.url)
+
+        form = response.context["form"]
+        self.assertEqual(form.initial, session["user_info"])
+
+    def test_valid_form_submission(self):
+        country = get_default_country()
+        province = get_default_province()
+        form_data = get_user_info_fake_session_data(country, province)
+        response = self.client.post(self.url, form_data)
+
+        self.assertRedirects(
+            response,
+            reverse_lazy(
+                "payments:payment-info", kwargs={"slug": self.membership.slug}
+            ),
+        )
+
+        session = self.client.session
+        self.assertEqual(session["user_info"], form_data)

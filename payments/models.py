@@ -9,7 +9,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from core.templatetags.core_tags import dollar_format
+from innovatix.core.templatetags.core_tags import dollar_format
 from payments.constants import PAYMENT_STATUS_CHOICES
 
 
