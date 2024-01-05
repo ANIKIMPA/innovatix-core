@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from innovatix.users.models import CoreContactModel, CustomerUser
+from innovatix.users.models import ContactModel, CustomerUser
 
 if TYPE_CHECKING:
     from innovatix.geo_territories.models import Country, Province
@@ -20,8 +20,8 @@ def create_customer_user(
     return CustomerUser.objects.create_user(**model_params)
 
 
-def create_contact(**kwargs: Any) -> CoreContactModel:
-    return CoreContactModel.objects.create(**kwargs)
+def create_contact(**kwargs: Any) -> ContactModel:
+    return ContactModel.objects.create(**kwargs)
 
 
 # Fake data
@@ -45,7 +45,7 @@ def create_fake_customer_user(
     return create_customer_user(**model_params)
 
 
-def create_fake_contact(**kwargs: Any) -> CoreContactModel:
+def create_fake_contact(**kwargs: Any) -> ContactModel:
     model_params = {
         "name": "Test",
         "email": "test@example.com",

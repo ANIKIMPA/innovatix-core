@@ -6,11 +6,11 @@ from django.utils import timezone
 from innovatix.core.tests import BaseTestCase
 from innovatix.geo_territories.utils import get_default_country, get_default_province
 from innovatix.users.forms import ContactForm
-from innovatix.users.models import CoreContactModel, CustomerUser
+from innovatix.users.models import ContactModel, CustomerUser
 from innovatix.users.utils import create_fake_contact, create_fake_customer_user
 
 
-class CoreContactFormViewTest(BaseTestCase):
+class ContactFormViewTest(BaseTestCase):
     def setUp(self):
         self.client = Client()
         self.url = reverse("users:contact")
@@ -32,8 +32,8 @@ class CoreContactFormViewTest(BaseTestCase):
         self.assertRedirects(
             response, reverse("home")
         )  # Assuming 'home' is the name of the url for the home page
-        # Check that a CoreContactModel instance has been created
-        self.assertEqual(CoreContactModel.objects.filter(name="Test").count(), 1)
+        # Check that a ContactModel instance has been created
+        self.assertEqual(ContactModel.objects.filter(name="Test").count(), 1)
         # Check that a log entry has been created
         self.assertEqual(
             LogEntry.objects.filter(object_repr="Test (test@example.com)").count(), 1
@@ -48,8 +48,8 @@ class CoreContactFormViewTest(BaseTestCase):
         }
         response = self.client.post(self.url, data=data)
         self.assertEqual(response.status_code, 200)  # No redirect should occur
-        # Check that no CoreContactModel instance has been created
-        self.assertEqual(CoreContactModel.objects.filter(name="").count(), 0)
+        # Check that no ContactModel instance has been created
+        self.assertEqual(ContactModel.objects.filter(name="").count(), 0)
 
 
 class ContactFormTest(TestCase):
@@ -98,16 +98,16 @@ class ContactFormTest(TestCase):
         self.assertEqual(form.errors["message"], ["This field is required."])
 
 
-class CoreContactModelTest(TestCase):
+class ContactModelTest(TestCase):
     def setUp(self) -> None:
         self.contact = create_fake_contact()
 
     def test_create_contact_model(self):
-        self.assertEqual(CoreContactModel.objects.count(), 1)
-        self.assertEqual(CoreContactModel.objects.first(), self.contact)
+        self.assertEqual(ContactModel.objects.count(), 1)
+        self.assertEqual(ContactModel.objects.first(), self.contact)
 
 
-class CoreCustomerUserTest(BaseTestCase):
+class CustomerUserTest(BaseTestCase):
     def setUp(self):
         # Create instances of Country and Province for testing
         self.country = get_default_country()

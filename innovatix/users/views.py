@@ -6,15 +6,15 @@ from django.utils.translation import gettext_lazy as _
 from innovatix.core.utils import log_creation
 from innovatix.core.views import CoreFormView
 from innovatix.users.forms import ContactForm
-from innovatix.users.models import CoreContactModel
+from innovatix.users.models import ContactModel
 
 
-class CoreContactFormView(CoreFormView):
+class ContactFormView(CoreFormView):
     template_name = "users/contact.html"
     form_class = ContactForm
     success_url = reverse_lazy("home")
 
-    def mail_managers(self, contact: CoreContactModel):
+    def mail_managers(self, contact: ContactModel):
         send_mail(
             "[Innovatix Digital] Nueva solicitud de contacto",
             f"Tienes una nueva solicitud de contacto de:\n\n"

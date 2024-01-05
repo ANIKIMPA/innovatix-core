@@ -7,15 +7,12 @@ from django.db.models.functions import Concat
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from innovatix.users.forms import (
-    CoreCustomerUserChangeForm,
-    CoreCustomerUserCreationForm,
-)
-from innovatix.users.models import CoreContactModel, CustomerUser, ProgramUser, Tag
+from innovatix.users.forms import CustomerUserChangeForm, CustomerUserCreationForm
+from innovatix.users.models import ContactModel, CustomerUser, ProgramUser, Tag
 
 
-@admin.register(CoreContactModel)
-class CoreContactAdmin(admin.ModelAdmin):
+@admin.register(ContactModel)
+class ContactAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "email",
@@ -28,7 +25,7 @@ class CoreContactAdmin(admin.ModelAdmin):
     )
 
     def has_change_permission(
-        self, request: HttpRequest, obj: CoreContactModel | None = None
+        self, request: HttpRequest, obj: ContactModel | None = None
     ) -> bool:
         return False
 
@@ -41,11 +38,11 @@ class CoreTagAdmin(admin.ModelAdmin):
 
 
 @admin.register(CustomerUser)
-class CoreCoreCustomerUserAdmin(UserAdmin):
+class CoreCustomerUserAdmin(UserAdmin):
     # Made 'add_form_template = None' to remove the default message on the admin template.
     add_form_template = None
-    add_form = CoreCustomerUserCreationForm
-    form = CoreCustomerUserChangeForm
+    add_form = CustomerUserCreationForm
+    form = CustomerUserChangeForm
     fieldsets = (
         (
             None,
@@ -174,7 +171,7 @@ class CoreCoreCustomerUserAdmin(UserAdmin):
 
 
 @admin.register(ProgramUser)
-class CoreProgramUserAdmin(UserAdmin):
+class ProgramUserAdmin(UserAdmin):
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         (_("Personal info"), {"fields": ("first_name", "last_name", "phone_number")}),

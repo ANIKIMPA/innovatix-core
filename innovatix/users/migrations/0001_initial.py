@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="CoreContactModel",
+            name="ContactModel",
             fields=[
                 (
                     "id",

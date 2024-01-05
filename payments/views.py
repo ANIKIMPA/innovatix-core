@@ -5,7 +5,7 @@ from django.urls import reverse, reverse_lazy
 
 from innovatix.core.views import CoreTemplateView
 from innovatix.geo_territories.models import Country, Province
-from innovatix.users.forms import CoreCustomerUserForm
+from innovatix.users.forms import CustomerUserForm
 from innovatix.users.models import CustomerUser
 from payments.constants import SUCCEEDED
 from payments.forms import PaymentMethodForm
@@ -67,7 +67,7 @@ class PaymentInfoFormView(MembershipInfoView):
         payment_method_id = form.cleaned_data["payment_method_id"]
 
         # Validate the data in the session.
-        customer_form = CoreCustomerUserForm(self.user_info)
+        customer_form = CustomerUserForm(self.user_info)
         if not customer_form.is_valid():
             return redirect("users:customer-info", slug=str(self.membership.slug))
 

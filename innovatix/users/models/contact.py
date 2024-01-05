@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from innovatix.core.services.phone_number_service import PhoneNumberService
 
 
-class CoreContactModel(models.Model):
+class ContactModel(models.Model):
     name = models.CharField(_("full name"), max_length=75)
     email = models.EmailField(_("email address"), max_length=100)
     phone_number = models.CharField(

@@ -3,12 +3,12 @@ from django.utils.translation import gettext_lazy as _
 
 from innovatix.core.forms import CoreModelForm
 from innovatix.core.services import payment_gateway
-from innovatix.users.models import CoreContactModel, CustomerUser
+from innovatix.users.models import ContactModel, CustomerUser
 
 
 class ContactForm(CoreModelForm):
     class Meta:
-        model = CoreContactModel
+        model = ContactModel
         fields = [
             "name",
             "email",
@@ -36,7 +36,7 @@ class ContactForm(CoreModelForm):
 #
 # If the day comes that we want to let customers have access to their accounts,
 # we can simply remove this form and use Django's built-in authentication forms.
-class CoreCustomerUserCreationForm(UserCreationForm):
+class CustomerUserCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["password1"].required = False
@@ -45,7 +45,7 @@ class CoreCustomerUserCreationForm(UserCreationForm):
         self.fields["password2"].help_text = ""
 
 
-class CoreCustomerUserChangeForm(UserChangeForm):
+class CustomerUserChangeForm(UserChangeForm):
     def save(self, commit: bool = True):
         """
         Save the instance first to prevent duplicate key value,
@@ -57,7 +57,7 @@ class CoreCustomerUserChangeForm(UserChangeForm):
         return instance
 
 
-class CoreCustomerUserForm(CoreModelForm):
+class CustomerUserForm(CoreModelForm):
     class Meta:
         model = CustomerUser
         fields = [

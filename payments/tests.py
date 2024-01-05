@@ -146,16 +146,16 @@ class PaymentInfoPageViewTest(BaseTestCase):
         "products.services.payment_gateway.create_confirm_subscription",
         return_value={"code": SUCCEEDED},
     )
-    @patch("payments.views.CoreCustomerUserForm")
+    @patch("payments.views.CustomerUserForm")
     def test_invalid_user_info_redirects(
         self,
-        MockCoreCustomerUserForm,
+        MockCustomerUserForm,
         mock_create_confirm_subscription,
         mock_create_customer,
     ):
         mock_form_instance = Mock()
         mock_form_instance.is_valid.return_value = False
-        MockCoreCustomerUserForm.return_value = mock_form_instance
+        MockCustomerUserForm.return_value = mock_form_instance
 
         form_data = {
             "card_name": "Test Example",

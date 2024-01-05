@@ -7,7 +7,7 @@ from django.views.generic import DetailView
 from django.views.generic.edit import FormView
 
 from innovatix.core.views import CoreListView
-from innovatix.users.forms import CoreCustomerUserForm
+from innovatix.users.forms import CustomerUserForm
 from products.models import Membership
 
 
@@ -36,7 +36,7 @@ class MembershipInfoView(FormView):
 
 
 class CustomerInfoFormView(MembershipInfoView):
-    form_class = CoreCustomerUserForm
+    form_class = CustomerUserForm
     template_name = "users/customer_info_form.html"
 
     def get_form_kwargs(self):
@@ -55,7 +55,7 @@ class CustomerInfoFormView(MembershipInfoView):
             "payments:payment-info", kwargs={"slug": self.membership.slug}
         )
 
-    def form_valid(self, form: CoreCustomerUserForm):
+    def form_valid(self, form: CustomerUserForm):
         self.request.session["user_info"] = form.cleaned_data_with_model_pk()
 
         return super().form_valid(form)
