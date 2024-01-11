@@ -12,8 +12,7 @@ class CoreAdmin(admin.ModelAdmin):
     def __init__(self, model: type, admin_site: AdminSite | None) -> None:
         super().__init__(model, admin_site)
 
-        if self.add_form:
-            self.change_form = self.form
+        self.change_form = self.form
 
     def get_custom_readonly_fields(self, request, obj=None):
         return []
@@ -24,11 +23,10 @@ class CoreAdmin(admin.ModelAdmin):
         return super().get_fieldsets(request, obj)
 
     def get_form(self, request, obj=None, change=False, **kwargs):
-        if self.add_form:
-            if change:
-                self.form = self.change_form
-            else:
-                self.form = self.add_form
+        if self.add_form and obj:
+            self.form = self.add_form
+        else:
+            self.form = self.change_form
 
         form = super().get_form(request, obj, change, **kwargs)
 
