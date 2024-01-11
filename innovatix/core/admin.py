@@ -23,7 +23,7 @@ class CoreAdmin(admin.ModelAdmin):
         return super().get_fieldsets(request, obj)
 
     def get_form(self, request, obj=None, change=False, **kwargs):
-        if self.add_form and obj:
+        if self.add_form and not obj:
             self.form = self.add_form
         else:
             self.form = self.change_form
