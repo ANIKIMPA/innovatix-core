@@ -37,7 +37,7 @@ class MembershipInfoView(FormView):
 
 class CustomerInfoFormView(MembershipInfoView):
     form_class = CustomerUserForm
-    template_name = "users/customer_info_form.html"
+    template_name = "products/customer_info_form.html"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

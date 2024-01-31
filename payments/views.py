@@ -39,7 +39,7 @@ class PaymentInfoFormView(MembershipInfoView):
         super().setup(request, *args, **kwargs)
         try:
             if "user_info" not in request.session:
-                reverse("users:customer-info", args=[str(self.membership.slug)])
+                reverse("products:customer-info", args=[str(self.membership.slug)])
 
             self.user_info: dict = request.session.get("user_info").copy()
             self.user_info["country"] = Country.objects.get(
@@ -69,7 +69,7 @@ class PaymentInfoFormView(MembershipInfoView):
         # Validate the data in the session.
         customer_form = CustomerUserForm(self.user_info)
         if not customer_form.is_valid():
-            return redirect("users:customer-info", slug=str(self.membership.slug))
+            return redirect("products:customer-info", slug=str(self.membership.slug))
 
         customer = payment_gateway.create_customer(
             CustomerUser(**self.user_info), payment_method_id=payment_method_id

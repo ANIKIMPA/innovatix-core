@@ -141,12 +141,14 @@ class UserMembershipAdminTestCase(BaseTestCase):
 class CustomerInfoPageViewTest(BaseTestCase):
     def setUp(self):
         self.membership = create_fake_membership()
-        self.url = reverse("users:customer-info", kwargs={"slug": self.membership.slug})
+        self.url = reverse(
+            "products:customer-info", kwargs={"slug": self.membership.slug}
+        )
 
     def test_page_loads(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "users/customer_info_form.html")
+        self.assertTemplateUsed(response, "products/customer_info_form.html")
 
     def test_form_prepopulated_with_session_data(self):
         session = self.client.session

@@ -167,9 +167,10 @@ class PaymentInfoPageViewTest(BaseTestCase):
             data=form_data,
         )
 
-        # Asserting that it redirects to the 'users:customer-info' URL
+        # Asserting that it redirects to the 'products:customer-info' URL
         self.assertRedirects(
-            response, reverse("users:customer-info", args=[str(self.membership.slug)])
+            response,
+            reverse("products:customer-info", args=[str(self.membership.slug)]),
         )
 
         # Asserting that the status code is 302 (redirect)
