@@ -1,6 +1,10 @@
 from django.urls import path
 
-from products.views import MembershipDetailView, MembershipListView
+from products.views import (
+    CustomerInfoFormView,
+    MembershipDetailView,
+    MembershipListView,
+)
 
 app_name = "products"
 urlpatterns = [
@@ -9,5 +13,10 @@ urlpatterns = [
         "membresias/<slug:slug>",
         MembershipDetailView.as_view(),
         name="membership-detail",
+    ),
+    path(
+        "membresias/<slug:slug>/usuario-info/",
+        CustomerInfoFormView.as_view(),
+        name="customer-info",
     ),
 ]
