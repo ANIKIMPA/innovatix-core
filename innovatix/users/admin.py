@@ -6,7 +6,6 @@ from django.db.models import CharField, Value
 from django.db.models.functions import Concat
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.users.forms import CustomerUserChangeForm, CustomerUserCreationForm
 from innovatix.users.models import ContactModel, CustomerUser, ProgramUser, Tag
 
@@ -62,7 +61,6 @@ class CoreCustomerUserAdmin(UserAdmin):
             {
                 "fields": (
                     "country",
-                    "company",
                     "address1",
                     "address2",
                     "city",

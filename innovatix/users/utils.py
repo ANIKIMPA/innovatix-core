@@ -68,7 +68,6 @@ def get_user_info_fake_session_data(country, province, **kwargs):
         "address1": "Test street",
         "address2": "",
         "city": "Testland",
-        "company": "",
         "zip": "00956",
         "accept_terms_condition": True,
     }

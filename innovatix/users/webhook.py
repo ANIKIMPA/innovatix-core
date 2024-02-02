@@ -39,7 +39,6 @@ def get_sanitized_data(stripe_customer):
         "email": stripe_customer.email,
         "first_name": first_name,
         "last_name": last_name,
-        "company": getattr(stripe_customer.metadata, "company", ""),
         "phone_number": stripe_customer.phone or "",
         "address1": getattr(address, "line1", ""),
         "address2": getattr(address, "line2", ""),

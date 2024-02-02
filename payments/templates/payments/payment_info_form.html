@@ -4,14 +4,16 @@
 
 {% block head %}
     <script src="https://js.stripe.com/v3/"></script>
-    <title>{{membership.name}} - PR Gun</title>
+    <title>{{membership.name}} - Site</title>
 {% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="text-center">
+        {% block title %}
         <h1>Configuremos su cuenta</h1>
-        <p>Estás a solo 60 segundos de unirte a nuestra membresía y obtener los beneficios de PR Gun Association.</p>
+        <p>Esta es la última información para unirte a nuestra membresía y obtener los beneficios.</p>        
+        {% endblock title %}
     </div>
     <form id="id_payment_form" method="post">
         {% csrf_token %}
@@ -69,7 +71,7 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                {% include "products/includes/membership.html" %}
+                {% include "site/includes/membership.html" %}
 
                 <div class="my-5">
                     <div class="text-center">* * * * * * * *</div>

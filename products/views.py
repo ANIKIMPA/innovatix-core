@@ -5,7 +5,6 @@ from django.http import Http404
 from django.urls import reverse_lazy
 from django.views.generic import DetailView
 from django.views.generic.edit import FormView
-
 from innovatix.core.views import CoreListView
 from innovatix.users.forms import CustomerUserForm
 from products.models import Membership
@@ -37,7 +36,7 @@ class MembershipInfoView(FormView):
 
 class CustomerInfoFormView(MembershipInfoView):
     form_class = CustomerUserForm
-    template_name = "products/customer_info_form.html"
+    template_name = "site/customer_info_form.html"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

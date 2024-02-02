@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 
 from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.core.services.abstract_payment_gateways import CoreAbstractPaymentGateway
 
 if TYPE_CHECKING:
@@ -53,7 +52,6 @@ class CoreStripePaymentGateway(CoreAbstractPaymentGateway):
             "metadata": {
                 "first_name": obj.first_name,
                 "last_name": obj.last_name,
-                "company": obj.company,
                 "from": "Innovatix Digital",
             },
         }

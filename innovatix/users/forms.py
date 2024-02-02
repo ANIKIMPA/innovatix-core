@@ -1,6 +1,5 @@
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.core.forms import CoreModelForm
 from innovatix.core.services import payment_gateway
 from innovatix.users.models import ContactModel, CustomerUser
@@ -65,7 +64,6 @@ class CustomerUserForm(CoreModelForm):
             "phone_number",
             "first_name",
             "last_name",
-            "company",
             "address1",
             "address2",
             "city",

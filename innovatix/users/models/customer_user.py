@@ -5,7 +5,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.geo_territories.utils import get_default_country
 from innovatix.users.constants import DEFAULT_COUNTRY_CODE, LANGUAGE_CHOICES
 from innovatix.users.models.base_user import BaseUser
@@ -44,7 +43,6 @@ class AbstractCustomerUser(BaseUser):
         _("Customer agreed to the Terms and Conditions."),
         default=False,
     )
-    company = models.CharField(_("company"), max_length=75, blank=True)
     address1 = models.CharField(_("address"), max_length=150)
     address2 = models.CharField(_("apartment, suite, etc."), max_length=150, blank=True)
     city = models.CharField(_("city"), max_length=75)
