@@ -8,21 +8,23 @@
 {% endblock %}
 
 {% block content %}
-<section>
-    <h1>Payment Successful!</h1>
-    <div class="container my-5">
-        <h2><span class="checkmark"><div class="success-icon">✓</div></span>Thank you for your subscription.</h2>
-        <p class="subtext">Your membership details will be sent to your email shortly.</p>
-        <div class="message-box">
-            <p>Thank you for your membership.</p>
-            <p>Your benefits and next steps will be outlined in your welcome package.</p>
-        </div>
-        <div class="btns">
-            <button class="btn">Account</button>
-            <button class="btn">Homepage</button>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+
+            <div class="p-5 rounded-circle border border-primary d-inline-block">
+                <i class="fas fa-check fa-4x text-primary"></i>
+            </div>
+
+            <h2 class="mt-4">Pago Exitoso!</h2>
+            <p class="fs-4 text-dark fw-bold">Gracias por subscribirte</p>
+            <p class="lead">Los detalles de tu subscripción se enviarán por email.</p>
+            <p class="lead">De necesitar información adicional nos cumunicaremos.</p>
+
+            <a class="btn btn-pink btn-lg mt-3" href="/"><i class="fas fa-home text-white"></i> Inicio</a>
         </div>
     </div>
-</section>
+</div>
 
 <script src="client.js" defer></script>
 {% endblock %}

@@ -40,3 +40,11 @@ def handle_subscription_update(event):
         subscription_update_or_create(data)
     except Exception as err:
         logger.error(f"Updating Subscription from webhook: {err}")
+
+
+def handle_product_deleted(event):
+    try:
+        data = event.data.object
+        Membership.objects.filter(external_product_id=data.id).delete()
+    except Exception as err:
+        logger.error(f"Failed deleting Product from webhook: {err}")

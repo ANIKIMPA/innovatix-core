@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django import forms
+from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 
@@ -12,6 +13,8 @@ from products.constants import (
 )
 from products.models import Membership
 from products.services import payment_gateway
+
+from .utils import create_initial_payment_product_if_not_exists
 
 
 class MembershipBaseForm(forms.ModelForm):
@@ -46,6 +49,8 @@ class MembershipAddForm(MembershipBaseForm):
         product = payment_gateway.create_membership(self.instance)
         self.instance.external_product_id = product.id
 
+        create_initial_payment_product_if_not_exists()
+
         return super().save(commit)
 
 
@@ -53,6 +58,8 @@ class MembershipChangeForm(forms.ModelForm):
     def save(self, commit=True):
         product = payment_gateway.update_membership(self.instance)
         self.instance.external_product_id = product.id
+
+        create_initial_payment_product_if_not_exists()
 
         return super().save(commit)
 

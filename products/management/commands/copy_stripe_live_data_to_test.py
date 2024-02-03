@@ -12,7 +12,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Setup Stripe with the live API key
-        payment_gateway = StripePaymentGateway(os.environ.get("STRIPE_SECRET_KEY_LIVE"))
+        payment_gateway = StripePaymentGateway(
+            os.environ.get("STRIPE_SECRET_KEY_LIVE"), settings.STRIPE_WEBHOOK_SECRET
+        )
         customers = payment_gateway.stripe.Customer.list(limit=20).data
 
         # Fetch all payment methods and payments for each customer

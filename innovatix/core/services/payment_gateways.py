@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
+from django.conf import settings
 from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
+
 from innovatix.core.services.abstract_payment_gateways import CoreAbstractPaymentGateway
 
 if TYPE_CHECKING:
@@ -24,7 +26,9 @@ class CoreStripePaymentGateway(CoreAbstractPaymentGateway):
         self.stripe = stripe
         self.stripe.api_key = api_key
 
-    def _get_customer_data(self, obj: CustomerUser, **kwargs):
+    def _get_customer_data(
+        self, obj: CustomerUser, **kwargs: dict[str, Any]
+    ) -> dict[str, Any]:
         return {
             "email": obj.email,
             "name": f"{obj.first_name} {obj.last_name}",
@@ -48,11 +52,11 @@ class CoreStripePaymentGateway(CoreAbstractPaymentGateway):
                 "postal_code": obj.zip,
                 "state": obj.province.code,
             },
-            "source": kwargs.get("payment_method_id", None),
+            "payment_method": kwargs.get("payment_method_id", None),
             "metadata": {
                 "first_name": obj.first_name,
                 "last_name": obj.last_name,
-                "from": "Innovatix Digital",
+                "from": settings.COMPANY_NAME,
             },
         }
 

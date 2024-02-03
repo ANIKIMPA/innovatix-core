@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.utils.translation import gettext_lazy as _
+
 from innovatix.core.forms import CoreModelForm
 from innovatix.core.services import payment_gateway
 from innovatix.users.models import ContactModel, CustomerUser
@@ -57,6 +58,10 @@ class CustomerUserChangeForm(UserChangeForm):
 
 
 class CustomerUserForm(CoreModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["accept_terms_condition"].required = True
+
     class Meta:
         model = CustomerUser
         fields = [

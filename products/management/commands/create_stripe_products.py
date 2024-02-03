@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from products.models import Membership
@@ -10,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # Setup Stripe with the live API key
         product = payment_gateway.create_initial_payment_product(
-            "Pago por Ingreso como socio de Innovatix Digital",
+            f"Pago por Ingreso como socio de {settings.COMPANY_NAME}",
         )
 
         print(f'ENTRY_COST_PRODUCT_ID = "{product.id}"')

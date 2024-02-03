@@ -1,16 +1,15 @@
-from __future__ import annotations
-
+import json
 import logging
-from typing import TYPE_CHECKING
+import math
+from typing import Any
 
 from django.http import HttpResponse
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
 
 from innovatix.core.services.payment_gateways import CoreStripePaymentGateway
-
-if TYPE_CHECKING:
-    from products.models import Membership, UserMembership
+from products.constants import INITIAL_PAYMENT_PRODUCT_NAME
+from products.models import Membership, UserMembership
 
 logger = logging.getLogger("django")
 
@@ -20,7 +19,40 @@ class StripePaymentGateway(CoreStripePaymentGateway):
     Stripe-specific implementation of the Stripe payment gateway.
     """
 
-    ENTRY_COST_PRODUCT_ID = "prod_OskLdFybEvC2jP"
+    TRANSACTION_FEE_PERCENT = 0.029
+    TRANSACTION_FEE_CENTS = 30
+
+    def entry_cost_product_id(self) -> str:
+        try:
+            return Membership.objects.get(
+                name=INITIAL_PAYMENT_PRODUCT_NAME
+            ).external_product_id
+        except Membership.DoesNotExist:
+            return ""
+
+    def calculate_cost_with_fee(self, price: float) -> float:
+        """
+        Calculate the cost with the transaction fee.
+        """
+        if price == 0:
+            return 0
+
+        cost = price + self.TRANSACTION_FEE_CENTS
+        cost = cost / (1 - self.TRANSACTION_FEE_PERCENT)
+
+        return math.ceil(cost)
+
+    def calculate_service_fee(self, price: float) -> float:
+        """
+        Calculate the transaction fee for a given price.
+        """
+        if price == 0:
+            return 0
+
+        return math.ceil(
+            self.calculate_cost_with_fee(price) * self.TRANSACTION_FEE_PERCENT
+            + self.TRANSACTION_FEE_CENTS
+        )
 
     def create_checkout_session(self, line_items, metadata, success_url, cancel_url):
         """
@@ -55,7 +87,7 @@ class StripePaymentGateway(CoreStripePaymentGateway):
         payment_method_id: str,
         membership: Membership,
         **kwargs,
-    ):
+    ) -> dict[str, Any]:
         """
         Creates and confirms a subscription for a customer, including a one-time charge.
 
@@ -77,8 +109,8 @@ class StripePaymentGateway(CoreStripePaymentGateway):
                 customer=customer_id,
                 description="One-time setup fee",
                 price_data={
-                    "product": self.ENTRY_COST_PRODUCT_ID,
-                    "unit_amount": membership.entry_cost,
+                    "product": self.entry_cost_product_id(),
+                    "unit_amount": self.calculate_cost_with_fee(membership.entry_cost),
                     "currency": "usd",
                 },
             )
@@ -89,7 +121,9 @@ class StripePaymentGateway(CoreStripePaymentGateway):
                     {
                         "price_data": {
                             "product": membership.external_product_id,
-                            "unit_amount": membership.recurring_price,
+                            "unit_amount": self.calculate_cost_with_fee(
+                                membership.recurring_price
+                            ),
                             "currency": "usd",
                             "recurring": {
                                 "interval": membership.recurring_payment,
@@ -156,7 +190,7 @@ class StripePaymentGateway(CoreStripePaymentGateway):
     def create_initial_payment_product(self, description: str):
         try:
             product = self.stripe.Product.create(
-                name="Pago por Ingreso",
+                name=INITIAL_PAYMENT_PRODUCT_NAME,
                 description=description,
             )
 
@@ -169,9 +203,11 @@ class StripePaymentGateway(CoreStripePaymentGateway):
         try:
             product = self.stripe.Product.create(
                 name=membership.name,
-                description=strip_tags(membership.short_description)
-                if membership.short_description
-                else None,
+                description=(
+                    strip_tags(membership.short_description)
+                    if membership.short_description
+                    else None
+                ),
                 metadata={"type": "membership"},
             )
 
@@ -222,3 +258,13 @@ class StripePaymentGateway(CoreStripePaymentGateway):
         except Exception as err:
             logger.error(f"Failed to updating subscription from Stripe: {str(err)}")
             return None
+
+    def construct_event(self, payload: dict) -> dict:
+        try:
+            event = self.stripe.Event.construct_from(
+                json.loads(payload), self.stripe.api_key
+            )
+            return event
+        except Exception as err:
+            logger.error(f"Failed to construct event from Stripe: {str(err)}")
+            raise

@@ -13,7 +13,6 @@ from products.constants import (
     RECURRING_INTERVAL_CHOICES,
     RECURRING_PAYMENT_INTERVAL_HELP_TEXT,
 )
-from products.services import payment_gateway
 
 
 class Membership(models.Model):
@@ -51,8 +50,6 @@ class Membership(models.Model):
             raise ValidationError(
                 "Cannot delete membership that is associated with a subscription."
             )
-
-        payment_gateway.delete_membership(self)
 
         super(Membership, self).delete(*args, **kwargs)
 

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import FormView
 
@@ -21,7 +22,12 @@ class URLNameContextMixin:
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)  # type: ignore
-        context.update({"url_name": self.request.resolver_match.url_name})  # type: ignore
+        context.update(
+            {
+                "url_name": self.request.resolver_match.url_name,
+                "company_name": settings.COMPANY_NAME,
+            }
+        )  # type: ignore
         return context
 
 

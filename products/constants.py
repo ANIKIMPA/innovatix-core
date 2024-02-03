@@ -20,3 +20,5 @@ RECURRING_PRICE_HELP_TEXT = _("This is the price charged for each recurring paym
 RECURRING_PAYMENT_INTERVAL_HELP_TEXT = _(
     "This specifies how often the recurring payment will be charged (e.g., monthly, annually)."
 )
+
+INITIAL_PAYMENT_PRODUCT_NAME = _("Pago por Ingreso")

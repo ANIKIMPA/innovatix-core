@@ -15,10 +15,11 @@
         <p>Esta es la última información para unirte a nuestra membresía y obtener los beneficios.</p>        
         {% endblock title %}
     </div>
-    <form id="id_payment_form" method="post">
-        {% csrf_token %}
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <form id="id_payment_form" method="post">
+                {% csrf_token %}
                 <h3>Customer Information</h3>
                 <div class="row">
                     <div class="col-sm-9 form-text">
@@ -32,7 +33,7 @@
                         </p>
                     </div>
                     <div class="col-sm-3">
-                        <a class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="{% url 'products:customer-info' membership.slug %}">Edit</a>
+                        <a href="{% url 'products:customer-info' membership.slug %}">Edit</a>
                     </div>
                 </div>
 
@@ -67,22 +68,20 @@
                     <div id="payment-element">
                         <!-- Elements will create form elements here -->
                     </div>
-
                 </div>
-            </div>
-            <div class="col-lg-6">
-                {% include "site/includes/membership.html" %}
-
-                <div class="my-5">
+                <div class="my-4">
                     <div class="text-center">* * * * * * * *</div>
-                    <p class="form-text">By clicking "Make payment", you confirm that your subscription will automatically renew and your credit card will automatically be charged the subscription price according to the summary section of this page until you cancel your subscription. You also authorize Puerto Rico Gun Association to charge the supplied payment method, or another payment method on file, for the subscription price on each renewal. You can cancel your subscription at any time.</p>
+                    <p class="form-text">By clicking "Make payment", you confirm that your subscription will automatically renew and your credit card will automatically be charged "<strong>{{ membership.get_display_recurring_price }}</strong> + fee" until you cancel your subscription. You also authorize <strong>{{company_name}}</strong> to charge the supplied payment method, or another payment method on file, for the subscription price on each renewal. You can cancel your subscription at any time.</p>
                     <div class="text-end">
-                        <button id="id_btn_submit" class="btn btn-danger" type="submit" disabled>Make payment</button>
+                        <button id="id_btn_submit" class="btn" type="submit" disabled>Make payment</button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+        <div class="col-lg-6">
+            {% include "site/includes/membership.html" %}
+        </div>
+    </div>
 </div>
 {% endblock %}
 
