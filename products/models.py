@@ -11,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from innovatix.core.templatetags.core_tags import dollar_format
 from products.constants import (
     RECURRING_INTERVAL_CHOICES,
+    RECURRING_INTERVAL_TO_SPANISH,
     RECURRING_PAYMENT_INTERVAL_HELP_TEXT,
 )
 
@@ -54,7 +55,7 @@ class Membership(models.Model):
         super(Membership, self).delete(*args, **kwargs)
 
     def get_display_recurring_price(self):
-        return f"{dollar_format(self.get_recurring_price())} / {self.recurring_payment}"
+        return f"{dollar_format(self.get_recurring_price())} / {RECURRING_INTERVAL_TO_SPANISH.get(self.recurring_payment)}"
 
     def get_display_entry_cost(self):
         return dollar_format(self.get_entry_cost())
@@ -122,7 +123,7 @@ class UserMembership(models.Model):
     )
 
     def get_display_recurring_price(self):
-        return f"{dollar_format(self.get_recurring_price())} / {self.recurring_payment}"
+        return f"{dollar_format(self.get_recurring_price())} / {RECURRING_INTERVAL_TO_SPANISH.get(self.recurring_payment)}"
 
     def get_recurring_price(self):
         return self.recurring_price / 100

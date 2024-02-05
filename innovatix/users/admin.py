@@ -6,8 +6,17 @@ from django.db.models import CharField, Value
 from django.db.models.functions import Concat
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
+
 from innovatix.users.forms import CustomerUserChangeForm, CustomerUserCreationForm
-from innovatix.users.models import ContactModel, CustomerUser, ProgramUser, Tag
+from innovatix.users.models import Company, ContactModel, CustomerUser, ProgramUser, Tag
+
+
+@admin.register(Company)
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ["name", "city", "state", "country", "email"]
+    search_fields = ["name", "city", "state", "country", "email"]
+    list_filter = ["country", "state"]
+    ordering = ["name"]
 
 
 @admin.register(ContactModel)
@@ -37,7 +46,7 @@ class CoreTagAdmin(admin.ModelAdmin):
 
 
 @admin.register(CustomerUser)
-class CoreCustomerUserAdmin(UserAdmin):
+class CustomerUserAdmin(UserAdmin):
     # Made 'add_form_template = None' to remove the default message on the admin template.
     add_form_template = None
     add_form = CustomerUserCreationForm
@@ -60,6 +69,7 @@ class CoreCustomerUserAdmin(UserAdmin):
             _("Address"),
             {
                 "fields": (
+                    "company",
                     "country",
                     "address1",
                     "address2",
@@ -86,6 +96,7 @@ class CoreCustomerUserAdmin(UserAdmin):
                     "last_name",
                     "email",
                     "phone_number",
+                    "company",
                     "address1",
                     "address2",
                     "city",

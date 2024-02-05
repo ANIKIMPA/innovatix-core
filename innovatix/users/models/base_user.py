@@ -43,31 +43,31 @@ class BaseUser(AbstractBaseUser):
     """
 
     email = models.EmailField(
-        _("email address"),
+        _("email"),
         max_length=150,
         unique=True,
-        help_text=_("Required. 150 characters or fewer."),
+        help_text=_("Requerido. 150 caracteres o menos."),
         error_messages={
-            "unique": _("A user with that email already exists."),
+            "unique": _("Un usuario con ese email ya existe."),
         },
     )
-    first_name = models.CharField(_("first name"), max_length=72)
-    last_name = models.CharField(_("last name"), max_length=72)
+    first_name = models.CharField(_("nombre"), max_length=72)
+    last_name = models.CharField(_("apellido"), max_length=72)
     phone_number = models.CharField(
-        _("phone number"),
+        _("Teléfono"),
         max_length=17,
         blank=True,
         validators=[PhoneNumberService.validate_phone_number],
     )
     is_active = models.BooleanField(
-        _("active"),
+        _("activo"),
         default=True,
         help_text=_(
-            "Designates whether this user should be treated as active. "
-            "Unselect this instead of deleting accounts."
+            "Designa si este usuario debe ser tratado como activo. "
+            "Anule la selección en lugar de eliminar cuentas."
         ),
     )
-    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+    date_joined = models.DateTimeField(_("fecha de registro"), default=timezone.now)
 
     objects = BaseUserManager()
 
@@ -75,8 +75,8 @@ class BaseUser(AbstractBaseUser):
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
     class Meta:
-        verbose_name = _("user")
-        verbose_name_plural = _("users")
+        verbose_name = _("usuario")
+        verbose_name_plural = _("usuarios")
         abstract = True
 
     def format_phone_number(self, country_code=DEFAULT_COUNTRY_CODE):

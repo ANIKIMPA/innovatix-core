@@ -12,7 +12,7 @@
     <div class="text-center">
         {% block title %}
         <h1>Configuremos su cuenta</h1>
-        <p>Esta es la última información para unirte a nuestra membresía y obtener los beneficios.</p>        
+        <p>Completa la última información para unirte a nuetro plan y obtener los beneficios.</p>        
         {% endblock title %}
     </div>
     
@@ -20,7 +20,7 @@
         <div class="col-lg-6">
             <form id="id_payment_form" method="post">
                 {% csrf_token %}
-                <h3>Customer Information</h3>
+                <h3>Información del Usuario</h3>
                 <div class="row">
                     <div class="col-sm-9 form-text">
                         <p>{{user_info.email}}</p>
@@ -33,14 +33,14 @@
                         </p>
                     </div>
                     <div class="col-sm-3">
-                        <a href="{% url 'products:customer-info' membership.slug %}">Edit</a>
+                        <a href="{% url 'products:customer-info' membership.slug %}">Editar</a>
                     </div>
                 </div>
 
                 <hr class="my-5">
 
                 <!-- Payment Information Form -->
-                <h2>Payment Information</h2>
+                <h2>Información de Pago</h2>
                 <div class="row">
                     <div class="col-lg-12">
                         <div id="error-message" class="text-danger fst-italic mb-3">
@@ -71,9 +71,9 @@
                 </div>
                 <div class="my-4">
                     <div class="text-center">* * * * * * * *</div>
-                    <p class="form-text">By clicking "Make payment", you confirm that your subscription will automatically renew and your credit card will automatically be charged "<strong>{{ membership.get_display_recurring_price }}</strong> + fee" until you cancel your subscription. You also authorize <strong>{{company_name}}</strong> to charge the supplied payment method, or another payment method on file, for the subscription price on each renewal. You can cancel your subscription at any time.</p>
+                    <p class="form-text">Al hacer clic en 'Realizar pago', confirmas que tu suscripción se renovará automáticamente y tu tarjeta de crédito será cargada automáticamente por '<strong>{{ membership.get_display_recurring_price }}</strong> + tarifa' hasta que canceles tu suscripción. También autorizas a <strong>{{company_name}}</strong> a cargar el método de pago proporcionado, u otro método de pago en archivo, por el precio de la suscripción en cada renovación. Puedes cancelar tu suscripción en cualquier momento.</p>
                     <div class="text-end">
-                        <button id="id_btn_submit" class="btn" type="submit" disabled>Make payment</button>
+                        <button id="id_btn_submit" class="btn" type="submit" disabled>Realizar pago</button>
                     </div>
                 </div>
             </form>

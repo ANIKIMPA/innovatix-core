@@ -2,12 +2,41 @@ from django.contrib.admin.models import LogEntry
 from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from innovatix.core.tests import BaseTestCase
 from innovatix.geo_territories.utils import get_default_country, get_default_province
 from innovatix.users.forms import ContactForm
 from innovatix.users.models import ContactModel, CustomerUser
 from innovatix.users.utils import create_fake_contact, create_fake_customer_user
+
+
+class CompanyModelTest(TestCase):
+    def setUp(self):
+        self.company = Company.objects.create(
+            name="Test Company",
+            address="123 Test Street",
+            city="Test City",
+            state=get_default_province(),
+            country=get_default_country(),
+            zip="12345",
+            phone="1234567890",
+            email="test@example.com",
+            website="http://www.example.com",
+            posting_frequency="Daily",
+        )
+
+    def test_company_attributes(self):
+        self.assertEqual(self.company.name, "Test Company")
+        self.assertEqual(self.company.address, "123 Test Street")
+        self.assertEqual(self.company.city, "Test City")
+        self.assertEqual(self.company.state, get_default_province())
+        self.assertEqual(self.company.country, get_default_country())
+        self.assertEqual(self.company.zip, "12345")
+        self.assertEqual(self.company.phone, "1234567890")
+        self.assertEqual(self.company.email, "test@example.com")
+        self.assertEqual(self.company.website, "http://www.example.com")
+        self.assertEqual(self.company.posting_frequency, "Daily")
 
 
 class ContactFormViewTest(BaseTestCase):

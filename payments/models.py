@@ -36,7 +36,7 @@ class PaymentMethod(models.Model):
         _("stripe ID"), max_length=50, blank=True
     )
     user = models.ForeignKey(
-        "users.CustomerUser", verbose_name=_("customer"), on_delete=models.CASCADE
+        "users.CustomerUser", verbose_name=_("cliente"), on_delete=models.CASCADE
     )
     card_name = models.CharField(_("name on card"), max_length=150)
     type = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES)

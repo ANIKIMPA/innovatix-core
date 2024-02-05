@@ -5,9 +5,12 @@ from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
+
 from innovatix.geo_territories.utils import get_default_country
 from innovatix.users.constants import DEFAULT_COUNTRY_CODE, LANGUAGE_CHOICES
-from innovatix.users.models.base_user import BaseUser
+
+from .base_user import BaseUser
+from .company import Company
 
 
 class AbstractCustomerUser(BaseUser):
@@ -15,59 +18,77 @@ class AbstractCustomerUser(BaseUser):
     An abstract base class for CustomerUser model.
     """
 
-    external_customer_id = models.CharField(_("Stripe ID"), max_length=50, blank=True)
+    external_customer_id = models.CharField(
+        _("ID de Stripe"), max_length=50, blank=True
+    )
     partner_number = models.CharField(
-        _("partner number"),
+        _("número de socio"),
         max_length=20,
         unique=True,
         blank=True,
         validators=[
             RegexValidator(
                 regex=r"^\d{4}-\d{2}-\d{4}$",
-                message=_("Partner number must be in the format: 'YYYY-MM-####'"),
+                message=_(
+                    "El número de socio debe estar en el formato: 'YYYY-MM-####'"
+                ),
                 code="invalid_partner_number",
             )
         ],
     )
     accept_email_marketing = models.BooleanField(
-        _("Customer agreed to receive marketing emails."), default=True
+        _("Cliente aceptó recibir correos electrónicos de marketing."), default=True
     )
     accept_sms_marketing = models.BooleanField(
-        _("Customer agreed to receive SMS marketing text messages."),
+        _("Cliente aceptó recibir mensajes de texto de marketing por SMS."),
         default=True,
         help_text=_(
-            "You should ask your customers for permission before you subscribe them to your marketing emails or SMS."
+            "Debes pedir permiso a tus clientes antes de suscribirlos a tus correos electrónicos o mensajes de texto de marketing."
         ),
     )
     accept_terms_condition = models.BooleanField(
-        _("Customer agreed to the Terms and Conditions."),
+        _("Cliente aceptó los Términos y Condiciones."),
         default=False,
     )
-    address1 = models.CharField(_("address"), max_length=150)
-    address2 = models.CharField(_("apartment, suite, etc."), max_length=150, blank=True)
-    city = models.CharField(_("city"), max_length=75)
+    address1 = models.CharField(_("dirección"), max_length=150)
+    address2 = models.CharField(
+        _("apartamento, suite, etc."), max_length=150, blank=True
+    )
+    city = models.CharField(_("ciudad"), max_length=75)
+    company = models.ForeignKey(
+        Company,
+        verbose_name=_("compañía"),
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
     province = models.ForeignKey(
-        "geo_territories.Province", verbose_name=_("state"), on_delete=models.PROTECT
+        "geo_territories.Province", verbose_name=_("estado"), on_delete=models.PROTECT
     )
     country = models.ForeignKey(
-        "geo_territories.Country", on_delete=models.PROTECT, default=get_default_country
+        "geo_territories.Country",
+        verbose_name=_("País"),
+        on_delete=models.PROTECT,
+        default=get_default_country,
     )
     tags = models.ManyToManyField(
         "users.Tag",
-        help_text=_("Tags can be used to categorize customers into groups."),
+        help_text=_(
+            "Las etiquetas se pueden usar para categorizar a los clientes en grupos."
+        ),
         blank=True,
     )
-    zip = models.CharField(_("zip code"), max_length=5)
+    zip = models.CharField(_("código postal"), max_length=5)
     notes = models.TextField(
-        _("notes"), blank=True, help_text=_("Add notes about your customer.")
+        _("notas"), blank=True, help_text=_("Agrega notas sobre tu cliente.")
     )
     langugage = models.CharField(
-        _("langugage"),
+        _("idioma"),
         max_length=30,
         choices=LANGUAGE_CHOICES,
         default="spanish",
     )
-    pay_tax = models.BooleanField(_("Collect tax"), default=True)
+    pay_tax = models.BooleanField(_("Recolectar impuesto"), default=True)
 
     class Meta:
         verbose_name = _("customer")

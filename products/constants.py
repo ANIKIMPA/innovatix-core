@@ -13,6 +13,13 @@ RECURRING_INTERVAL_CHOICES = [
     (YEAR, _("Annual")),
 ]
 
+RECURRING_INTERVAL_TO_SPANISH = {
+    DAY: _("día"),
+    WEEK: _("semana"),
+    MONTH: _("mes"),
+    YEAR: _("año"),
+}
+
 ENTRY_COST_HELP_TEXT = _(
     "This is the initial price charged when a new subscription is created."
 )
