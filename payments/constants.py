@@ -6,6 +6,7 @@ INCOMPLETED = "incomplete"
 FAILED = "failed"
 REFUNDED = "refunded"
 DISPUTED = "disputed"
+PAID = "paid"
 REQUIRES_PAYMENT_METHOD = "requires_payment_method"
 
 
@@ -18,5 +19,6 @@ PAYMENT_STATUS_CHOICES = [
     (FAILED, FAILED.capitalize()),
     (REFUNDED, REFUNDED.capitalize()),
     (DISPUTED, DISPUTED.capitalize()),
+    (PAID, PAID.capitalize()),
     (REQUIRES_PAYMENT_METHOD, "Incomplete"),
 ]
