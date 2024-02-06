@@ -1,7 +1,8 @@
+import logging
 from typing import Any
 
 from django.db.models.query import QuerySet
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView
@@ -21,6 +22,8 @@ from products.webhook import (
     handle_subscription_creation,
     handle_subscription_update,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class MembershipInfoView(CoreFormView):
@@ -100,7 +103,10 @@ def webhook_received(request):
     try:
         event = payment_gateway.construct_event(payload)
     except ValueError as e:
-        # Invalid payload
+        logger.error(f"Invalid payload: {e}")
+        return HttpResponse(status=400)
+    except Exception as e:
+        logger.error(f"Webhook error: {e}")
         return HttpResponse(status=400)
 
     # Handle the event
@@ -145,7 +151,10 @@ def webhook_received(request):
         handle_payment_method_creation(event)
         handle_payment_update(event)
     else:
-        print("Unhandled event type {}".format(event.type))
+        logger.info(f"Unhandled event type {event.type}")
+        return JsonResponse(
+            {"status": "success", "message": "Unhandled event type"}, status=200
+        )
 
     # Passed signature verification
     return HttpResponse(status=200)
