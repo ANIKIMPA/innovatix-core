@@ -70,6 +70,7 @@ class PaymentInfoFormView(MembershipInfoView):
 
     def form_valid(self, form):
         payment_method_id = form.cleaned_data["payment_method_id"]
+        customer = None
 
         # Validate the data in the session.
         customer_form = CustomerUserForm(self.user_info)
@@ -119,7 +120,7 @@ class PaymentInfoFormView(MembershipInfoView):
                 f'{self.request.path}?client_secret={payment_response["client_secret"]}'
             )
 
-        if customer.id:
+        if customer and customer.id:
             payment_gateway.delete_customer(customer.id)
 
         form.add_error(None, payment_response["error"]["message"])
