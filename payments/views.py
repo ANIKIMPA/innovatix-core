@@ -1,7 +1,10 @@
+import logging
+
 from django.conf import settings
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 from innovatix.core.views import CoreTemplateView
 from innovatix.geo_territories.models import Country, Province
@@ -11,6 +14,8 @@ from payments.constants import SUCCEEDED
 from payments.forms import PaymentMethodForm
 from products.services import payment_gateway
 from products.views import MembershipInfoView
+
+logger = logging.getLogger("django")
 
 
 def get_client_ip(request):
@@ -71,17 +76,40 @@ class PaymentInfoFormView(MembershipInfoView):
         if not customer_form.is_valid():
             return redirect("products:customer-info", slug=str(self.membership.slug))
 
-        customer = payment_gateway.create_customer(
-            CustomerUser(**self.user_info), payment_method_id=payment_method_id
-        )
+        try:
+            customer = payment_gateway.create_customer(
+                CustomerUser(**self.user_info), payment_method_id=payment_method_id
+            )
 
-        payment_response = payment_gateway.create_confirm_subscription(
-            customer_id=customer.id,
-            payment_method_id=payment_method_id,
-            membership=self.membership,
-            ip_address=get_client_ip(self.request),
-            user_agent=self.request.META.get("HTTP_USER_AGENT"),
-        )
+            payment_response = payment_gateway.create_confirm_subscription(
+                customer_id=customer.id,
+                payment_method_id=payment_method_id,
+                membership=self.membership,
+                ip_address=get_client_ip(self.request),
+                user_agent=self.request.META.get("HTTP_USER_AGENT"),
+            )
+        except payment_gateway.stripe.CardError as err:
+            logger.error(f"Card error: {err.user_message}")
+            payment_response = {
+                "status": err.http_status,
+                "client_secret": None,
+                "message": err.user_message,
+                "code": err.code,
+                "error": {"message": err.user_message},
+            }
+        except Exception as err:
+            logger.error(f"Failed creating Stripe customer: {err}")
+            payment_response = {
+                "status": err.http_status,
+                "client_secret": None,
+                "message": err.user_message,
+                "code": err.code,
+                "error": {
+                    "message": _(
+                        "There was an error processing your payment. Try again later."
+                    )
+                },
+            }
 
         if payment_response["code"] == SUCCEEDED:
             return super().form_valid(form)
