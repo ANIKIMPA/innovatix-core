@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
+
 from innovatix.core.tests import BaseTestCase
 from innovatix.geo_territories.utils import get_default_country, get_default_province
 from innovatix.users.utils import (
@@ -147,7 +148,7 @@ class CustomerInfoPageViewTest(BaseTestCase):
     def test_page_loads(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "site/customer_info_form.html")
+        self.assertTemplateUsed(response, "products/customer_info_form.html")
 
     def test_form_prepopulated_with_session_data(self):
         session = self.client.session

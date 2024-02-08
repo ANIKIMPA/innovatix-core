@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.core.mail import send_mail
@@ -100,9 +101,30 @@ class BaseUser(AbstractBaseUser):
         """Return the short name for the user."""
         return self.first_name
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        """Send an email to this user."""
-        send_mail(subject, message, from_email, [self.email], **kwargs)
+    def email_user(
+        self, subject, message, from_email=None, html_message=None, **kwargs
+    ):
+        """
+        Sends an email to the specified recipients.
+
+        :param subject: Subject of the email
+        :param message: Plain text message content
+        :param recipient_list: List of recipient email addresses
+        :param from_email: Sender's email address. If None, Django will use the DEFAULT_FROM_EMAIL setting
+        :param html_message: HTML content of the email (optional)
+        :return: Number of successfully delivered messages (1 or 0)
+        """
+        if from_email is None:
+            from_email = settings.DEFAULT_FROM_EMAIL
+
+        send_mail(
+            subject,
+            message,
+            from_email,
+            [self.email],
+            html_message=html_message,
+            **kwargs
+        )
 
     def __str__(self) -> str:
         return self.get_full_name()
