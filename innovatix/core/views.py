@@ -26,6 +26,7 @@ class URLNameContextMixin:
             {
                 "url_name": self.request.resolver_match.url_name,
                 "company_name": settings.COMPANY_NAME,
+                "company_phone": settings.COMPANY_PHONE,
             }
         )  # type: ignore
         return context
