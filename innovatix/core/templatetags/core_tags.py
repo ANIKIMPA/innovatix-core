@@ -1,5 +1,8 @@
 from django import template
 
+from innovatix.core.services.phone_number_service import PhoneNumberService
+from innovatix.users.constants import DEFAULT_COUNTRY_CODE
+
 register = template.Library()
 
 
@@ -54,3 +57,11 @@ def contents(field):
 def help_text(field):
     field_name = field.field.get("name")
     return field.form[field_name].help_text
+
+
+@register.filter(name="phone_format")
+def phone_format(value: str):
+    try:
+        return PhoneNumberService.format_phone_number(value, DEFAULT_COUNTRY_CODE)
+    except Exception:
+        return value
