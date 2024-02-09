@@ -10,7 +10,7 @@ from payments.models import Payment, PaymentMethod
 from payments.webhook import payment_method_update_or_create
 from products.models import UserMembership
 from products.services import payment_gateway
-from products.webhook import subscription_update_or_create
+from products.webhook import SubscriptionStripeWebhook
 
 
 class Command(BaseCommand):
@@ -48,8 +48,9 @@ class Command(BaseCommand):
             dt_object = datetime.fromtimestamp(stripe_subscription.created)
             aware_dt_object = timezone.make_aware(dt_object)
 
-            subscription_update_or_create(
-                stripe_subscription, date_subscribed=aware_dt_object
+            subscription_webhook = SubscriptionStripeWebhook()
+            subscription_webhook.handle_update_or_create(
+                stripe_subscription=stripe_subscription, date_subscribed=aware_dt_object
             )
 
     def sync_payment_methods(self):

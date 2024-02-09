@@ -1,45 +1,53 @@
 import logging
+from typing import Any
 
 from innovatix.users.models import CustomerUser
 from products.models import Membership, UserMembership
-from products.utils import create_user_membership
 
 logger = logging.getLogger("django")
 
 
-def subscription_update_or_create(stripe_subscription, **kwargs):
-    UserMembership.objects.update_or_create(
-        external_subscription_id=stripe_subscription.id,
-        defaults={
-            "user": CustomerUser.objects.get(
-                external_customer_id=stripe_subscription.customer
-            ),
-            "membership": Membership.objects.get(
-                external_product_id=stripe_subscription.plan.product
-            ),
-            "recurring_price": stripe_subscription.plan.amount,
-            "recurring_payment": stripe_subscription.plan.interval,
-            "external_subscription_id": stripe_subscription.id,
-            "status": stripe_subscription.status,
-            **kwargs,
-        },
-    )
+class SubscriptionStripeWebhook:
+    def __init__(self, event):
+        self.event = event
 
+    def handle_update_or_create(
+        self, **kwargs: dict[str, Any]
+    ) -> tuple[UserMembership, bool]:
+        stripe_subscription = kwargs.get("stripe_subscription", self.event.data.object)
 
-def handle_subscription_creation(event):
-    try:
-        data = event.data.object
-        subscription_update_or_create(data)
-    except Exception as err:
-        logger.error(f"Creating UserMembership from webhook: {err}")
+        return UserMembership.objects.update_or_create(
+            external_subscription_id=stripe_subscription.id,
+            defaults={
+                "user": CustomerUser.objects.get(
+                    external_customer_id=stripe_subscription.customer
+                ),
+                "membership": Membership.objects.get(
+                    external_product_id=stripe_subscription.plan.product
+                ),
+                "recurring_price": stripe_subscription.plan.amount,
+                "recurring_payment": stripe_subscription.plan.interval,
+                "external_subscription_id": stripe_subscription.id,
+                "status": stripe_subscription.status,
+                **kwargs,
+            },
+        )
 
+    def handle_creation(self) -> UserMembership:
+        try:
+            subscription, _ = self.handle_update_or_create()
 
-def handle_subscription_update(event):
-    try:
-        data = event.data.object
-        subscription_update_or_create(data)
-    except Exception as err:
-        logger.error(f"Updating Subscription from webhook: {err}")
+            return subscription
+        except Exception as err:
+            logger.error(f"Creating Subscription from webhook: {err}")
+
+    def handle_update(self):
+        try:
+            subscription, _ = self.handle_update_or_create()
+
+            return subscription
+        except Exception as err:
+            logger.error(f"Updating Subscription from webhook: {err}")
 
 
 def handle_product_deleted(event):
