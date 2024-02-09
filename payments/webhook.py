@@ -24,6 +24,7 @@ def handle_payment_creation(event):
         )
     except Exception as err:
         logger.error(f"Creating Payment from webhook: {err}")
+        raise
 
 
 def handle_payment_update(event):
@@ -38,6 +39,7 @@ def handle_payment_update(event):
         payment.save()
     except Exception as err:
         logger.error(f"Updating Payment from webhook: {err}")
+        raise
 
 
 def payment_method_update_or_create(stripe_payment_method):
@@ -65,3 +67,4 @@ def handle_payment_method_creation(event):
         payment_method_update_or_create(data)
     except Exception as err:
         logger.error(f"Creating PaymentMethod from webhook: {err}")
+        raise

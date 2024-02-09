@@ -40,6 +40,7 @@ class SubscriptionStripeWebhook:
             return subscription
         except Exception as err:
             logger.error(f"Creating Subscription from webhook: {err}")
+            raise
 
     def handle_update(self):
         try:
@@ -48,6 +49,7 @@ class SubscriptionStripeWebhook:
             return subscription
         except Exception as err:
             logger.error(f"Updating Subscription from webhook: {err}")
+            raise
 
 
 def handle_product_deleted(event):
@@ -56,3 +58,4 @@ def handle_product_deleted(event):
         Membership.objects.filter(external_product_id=data.id).delete()
     except Exception as err:
         logger.error(f"Failed deleting Product from webhook: {err}")
+        raise

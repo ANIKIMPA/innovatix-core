@@ -63,6 +63,7 @@ def handle_customer_creation(event):
         )
     except Exception as err:
         logger.error(f"Failed creating CustomerUser from webhook: {err}")
+        raise
 
 
 def handle_customer_update(event):
@@ -83,6 +84,7 @@ def handle_customer_update(event):
         )
     except Exception as err:
         logger.error(f"Failed updating CustomerUser from webhook: {err}")
+        raise
 
 
 def handle_cusomer_deletion(event):
@@ -96,3 +98,4 @@ def handle_cusomer_deletion(event):
             customer.delete()
     except Exception as err:
         logger.error(f"Failed deleting CustomerUser from webhook: {err}")
+        raise
