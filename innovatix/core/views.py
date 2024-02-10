@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.views.generic import ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import FormView
 
 
@@ -42,4 +42,8 @@ class CoreListView(URLNameContextMixin, ListView):
 
 
 class CoreFormView(URLNameContextMixin, FormView):
+    pass
+
+
+class CoreDetailView(URLNameContextMixin, DetailView):
     pass

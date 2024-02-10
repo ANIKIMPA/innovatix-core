@@ -1,14 +1,18 @@
 import logging
+from typing import Any
 
+import stripe
 from innovatix.core.utils import log_change, log_creation, log_deletion
 from innovatix.geo_territories.models import Country, Province
 from innovatix.users.models import CustomerUser
-from innovatix.users.utils import create_customer_user, is_an_existing_customer
+from innovatix.users.utils import create_customer_user
 
 logger = logging.getLogger("django")
 
 
-def get_sanitized_data(stripe_customer):
+def get_sanitized_data(
+    stripe_customer: stripe.Customer,
+) -> dict[str, Province | Country | str | Any | None]:
     address = stripe_customer.address or {}
     country = Country.objects.get(
         code=getattr(stripe_customer.address, "country", "US")
@@ -48,16 +52,17 @@ def get_sanitized_data(stripe_customer):
     }
 
 
-def handle_customer_creation(event):
+def handle_customer_creation(event: stripe.Event):
     try:
-        data = event.data.object
+        data: stripe.Customer = event.data.object
 
-        if not data.email or is_an_existing_customer(data.email):
-            # Reject customer creation with an existent email.
+        if not data.email:
             return
 
+        sanitized_data = get_sanitized_data(data)
+
         # Create CustomerUser with sanitized data
-        customer = create_customer_user(**get_sanitized_data(data))
+        customer = create_customer_user(**sanitized_data)
         log_creation(
             customer, message=f'Added from {getattr(data.metadata, "from", "Stripe")}'
         )
@@ -66,7 +71,7 @@ def handle_customer_creation(event):
         raise
 
 
-def handle_customer_update(event):
+def handle_customer_update(event: stripe.Event):
     try:
         data = event.data.object
 
@@ -87,7 +92,7 @@ def handle_customer_update(event):
         raise
 
 
-def handle_cusomer_deletion(event):
+def handle_customer_deletion(event: stripe.Event):
     try:
         data = event.data.object
 

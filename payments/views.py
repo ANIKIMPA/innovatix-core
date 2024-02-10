@@ -5,7 +5,6 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.core.views import CoreTemplateView
 from innovatix.geo_territories.models import Country, Province
 from innovatix.users.forms import CustomerUserForm
@@ -90,21 +89,23 @@ class PaymentInfoFormView(MembershipInfoView):
                 user_agent=self.request.META.get("HTTP_USER_AGENT"),
             )
         except payment_gateway.stripe.CardError as err:
-            logger.error(f"Card error: {err.user_message}")
+            logger.error(
+                f"Card error: {getattr(err, 'user_message', 'An error occurred')}"
+            )
             payment_response = {
-                "status": err.http_status,
+                "status": getattr(err, "http_status", 400),
                 "client_secret": None,
-                "message": err.user_message,
-                "code": err.code,
-                "error": {"message": err.user_message},
+                "message": getattr(err, "user_message", "An error occurred"),
+                "code": getattr(err, "code", "card_error"),
+                "error": {"message": getattr(err, "user_message", "An error occurred")},
             }
         except Exception as err:
             logger.error(f"Failed creating Stripe customer: {err}")
             payment_response = {
-                "status": err.http_status,
+                "status": getattr(err, "http_status", 500),
                 "client_secret": None,
-                "message": err.user_message,
-                "code": err.code,
+                "message": str(err),
+                "code": getattr(err, "code", "internal_error"),
                 "error": {
                     "message": _(
                         "There was an error processing your payment. Try again later."

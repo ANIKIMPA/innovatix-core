@@ -1,5 +1,7 @@
 import logging
 
+import stripe
+
 from innovatix.users.models import CustomerUser
 from payments.models import Payment, PaymentMethod
 from products.models import UserMembership
@@ -7,9 +9,9 @@ from products.models import UserMembership
 logger = logging.getLogger("django")
 
 
-def handle_payment_creation(event):
+def handle_payment_creation(event: stripe.Event):
     try:
-        data = event.data.object
+        data: stripe.Invoice = event.data.object
         subscription = UserMembership.objects.get(
             external_subscription_id=data.subscription
         )
@@ -17,9 +19,9 @@ def handle_payment_creation(event):
             external_payment_id=data.payment_intent,
             description=data.description,
             user_membership=subscription,
-            subtotal=data.subtotal if data.subtotal is not None else 0.00,
+            subtotal=data.subtotal if data.subtotal else 0.00,
             tax=data.tax if data.tax is not None else 0.00,
-            total=data.total if data.total is not None else 0.00,
+            total=data.total if data.total else 0.00,
             status=data.status,
         )
     except Exception as err:
@@ -27,9 +29,9 @@ def handle_payment_creation(event):
         raise
 
 
-def handle_payment_update(event):
+def handle_payment_update(event: stripe.Event):
     try:
-        data = event.data.object
+        data: stripe.PaymentIntent = event.data.object
         payment = Payment.objects.get(external_payment_id=data.id)
         payment.status = data.status
         payment.description = data.description
@@ -42,7 +44,7 @@ def handle_payment_update(event):
         raise
 
 
-def payment_method_update_or_create(stripe_payment_method):
+def payment_method_update_or_create(stripe_payment_method: stripe.PaymentMethod):
     customer = CustomerUser.objects.get(
         external_customer_id=stripe_payment_method.customer
     )
@@ -53,15 +55,15 @@ def payment_method_update_or_create(stripe_payment_method):
             "external_payment_method_id": stripe_payment_method.id,
             "user": customer,
             "card_name": stripe_payment_method.billing_details.name or "",
-            "type": stripe_payment_method.card.brand,
-            "last_four": stripe_payment_method.card.last4,
-            "expiration_month": stripe_payment_method.card.exp_month,
-            "expiration_year": stripe_payment_method.card.exp_year,
+            "type": getattr(stripe_payment_method.card, "brand", None),
+            "last_four": getattr(stripe_payment_method.card, "last4", None),
+            "expiration_month": getattr(stripe_payment_method.card, "exp_month", None),
+            "expiration_year": getattr(stripe_payment_method.card, "exp_year", None),
         },
     )
 
 
-def handle_payment_method_creation(event):
+def handle_payment_method_creation(event: stripe.Event):
     try:
         data = event.data.object
         payment_method_update_or_create(data)

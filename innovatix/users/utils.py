@@ -73,7 +73,3 @@ def get_user_info_fake_session_data(country, province, **kwargs):
     }
     data.update(**kwargs)
     return data
-
-
-def is_an_existing_customer(email: str) -> bool:
-    return CustomerUser.objects.filter(email=email).exists()
