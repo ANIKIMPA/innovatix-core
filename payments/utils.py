@@ -45,7 +45,9 @@ def create_fake_payment_method(user: CustomerUser, **kwargs: Any) -> PaymentMeth
 
 
 def create_fake_payment(
-    user_membership: UserMembership, payment_method: PaymentMethod, **kwargs: Any
+    user_membership: UserMembership,
+    payment_method: PaymentMethod | None = None,
+    **kwargs: Any
 ) -> Payment:
     model_params = {
         "user_membership": user_membership,
