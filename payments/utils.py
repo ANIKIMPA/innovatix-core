@@ -5,6 +5,8 @@ from innovatix.users.models import CustomerUser
 from payments.models import Payment, PaymentMethod
 from products.models import UserMembership
 
+from .constants import SUCCEEDED
+
 
 def create_payment_method(user: CustomerUser, **kwargs: Any) -> PaymentMethod:
     model_params = {
@@ -55,7 +57,7 @@ def create_fake_payment(
         "subtotal": 10.00,
         "tax": 0.00,
         "total": 10.00,
-        "status": "completed",
+        "status": SUCCEEDED,
     }
     model_params.update(**kwargs)
 

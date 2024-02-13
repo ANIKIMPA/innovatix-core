@@ -8,7 +8,6 @@ from django.core.validators import (
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.core.templatetags.core_tags import dollar_format
 from payments.constants import PAYMENT_STATUS_CHOICES
 
@@ -89,9 +88,13 @@ class Payment(models.Model):
         PaymentMethod, on_delete=models.SET_NULL, null=True
     )
     date = models.DateTimeField(_("paid on"), default=timezone.now)
-    subtotal = models.IntegerField(_("subtotal"), validators=[MinValueValidator(0)])
-    tax = models.IntegerField(_("tax"), validators=[MinValueValidator(0)])
-    total = models.IntegerField(_("total"), validators=[MinValueValidator(0)])
+    subtotal = models.IntegerField(
+        _("subtotal"), validators=[MinValueValidator(0)], default=0
+    )
+    tax = models.IntegerField(_("tax"), validators=[MinValueValidator(0)], default=0)
+    total = models.IntegerField(
+        _("total"), validators=[MinValueValidator(0)], default=0
+    )
     status = models.CharField(
         choices=PAYMENT_STATUS_CHOICES, default="pending", max_length=30
     )

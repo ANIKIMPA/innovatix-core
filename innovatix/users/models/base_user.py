@@ -17,14 +17,14 @@ class BaseUserManager(UserManager):
         """
         return self.model.objects.filter(email=email).exists()
 
-    def _create_user(
+    def _create_or_update_user(
         self,
         email: str,
         first_name: str,
         last_name: str,
         password: str | None,
         **extra_fields: dict[str, Any]
-    ) -> "BaseUser":
+    ) -> tuple["BaseUser", bool]:
         """
         Create and save a user with the given email, first name, last name and password.
         """
@@ -38,22 +38,29 @@ class BaseUserManager(UserManager):
             raise ValueError("The last name must be provided")
 
         email = self.normalize_email(email)
-        user = self.model(
-            email=email, first_name=first_name, last_name=last_name, **extra_fields
-        )
-        user.password = make_password(password)
-        user.save(using=self._db)
-        return user
+        password = make_password(password)
 
-    def create_user(
+        return self.update_or_create(
+            email=email,
+            defaults={
+                "first_name": first_name,
+                "last_name": last_name,
+                "password": password,
+                **extra_fields,
+            },
+        )
+
+    def create_or_update_user(
         self,
         email: str,
         first_name: str,
         last_name: str,
         password: str | None = None,
         **extra_fields: dict[str, Any]
-    ) -> "BaseUser":
-        return self._create_user(email, first_name, last_name, password, **extra_fields)
+    ) -> tuple["BaseUser", bool]:
+        return self._create_or_update_user(
+            email, first_name, last_name, password, **extra_fields
+        )
 
 
 class BaseUser(AbstractBaseUser):

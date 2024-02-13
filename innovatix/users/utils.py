@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from innovatix.geo_territories.models import Country, Province
 
 
-def create_customer_user(
+def create_or_update_customer_user(
     province: Province, country: Country, **kwargs: Any
 ) -> CustomerUser:
     model_params = {
@@ -17,7 +17,7 @@ def create_customer_user(
     }
     model_params.update(**kwargs)
 
-    return CustomerUser.objects.create_user(**model_params)
+    return CustomerUser.objects.create_or_update_user(**model_params)
 
 
 def create_contact(**kwargs: Any) -> ContactModel:
@@ -42,7 +42,7 @@ def create_fake_customer_user(
     }
     model_params.update(**kwargs)
 
-    return create_customer_user(**model_params)
+    return create_or_update_customer_user(**model_params)
 
 
 def create_fake_contact(**kwargs: Any) -> ContactModel:

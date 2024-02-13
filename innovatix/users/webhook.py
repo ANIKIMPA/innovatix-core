@@ -5,7 +5,7 @@ import stripe
 from innovatix.core.utils import log_change, log_creation, log_deletion
 from innovatix.geo_territories.models import Country, Province
 from innovatix.users.models import CustomerUser
-from innovatix.users.utils import create_customer_user
+from innovatix.users.utils import create_or_update_customer_user
 
 logger = logging.getLogger("django")
 
@@ -52,7 +52,7 @@ def get_sanitized_data(
     }
 
 
-def handle_customer_creation(event: stripe.Event):
+def handle_customer_update_or_creation(event: stripe.Event):
     try:
         data: stripe.Customer = event.data.object
 
@@ -62,33 +62,20 @@ def handle_customer_creation(event: stripe.Event):
         sanitized_data = get_sanitized_data(data)
 
         # Create CustomerUser with sanitized data
-        customer = create_customer_user(**sanitized_data)
-        log_creation(
-            customer, message=f'Added from {getattr(data.metadata, "from", "Stripe")}'
-        )
+        customer, created = create_or_update_customer_user(**sanitized_data)
+
+        if created:
+            log_creation(
+                customer,
+                message=f'Added from {getattr(data.metadata, "from", "Stripe")}',
+            )
+        else:
+            log_change(
+                customer,
+                message=f'Changed from {getattr(data.metadata, "from", "Stripe")}',
+            )
     except Exception as err:
-        logger.error(f"Failed creating CustomerUser from webhook: {err}")
-        raise
-
-
-def handle_customer_update(event: stripe.Event):
-    try:
-        data = event.data.object
-
-        if not CustomerUser.objects.filter(external_customer_id=data.id).exists():
-            return handle_customer_creation(event)
-
-        # Update CustomerUser with sanitized data
-        customer = CustomerUser.objects.filter(external_customer_id=data.id).update(
-            **get_sanitized_data(data)
-        )
-
-        log_change(
-            customer,
-            message=f'Changed from {getattr(data.metadata, "from", "Stripe")}',
-        )
-    except Exception as err:
-        logger.error(f"Failed updating CustomerUser from webhook: {err}")
+        logger.error(f"Failed creating or updating CustomerUser from webhook: {err}")
         raise
 
 
