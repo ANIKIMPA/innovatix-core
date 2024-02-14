@@ -4,7 +4,6 @@ from django.db.models.query import QuerySet
 from django.http import Http404
 from django.urls import reverse_lazy
 from django.views.generic import DetailView
-
 from innovatix.core.views import CoreFormView, CoreListView
 from innovatix.users.forms import CustomerUserForm
 from products.models import Membership
@@ -16,7 +15,7 @@ class MembershipInfoView(CoreFormView):
         super().setup(request, *args, **kwargs)
         try:
             self.membership: Membership = Membership.objects.get(
-                slug=kwargs["slug"], is_visible=True
+                slug=kwargs["slug"], is_purchasable=True
             )
         except Membership.DoesNotExist:
             raise Http404("No Membership matches the given query.")

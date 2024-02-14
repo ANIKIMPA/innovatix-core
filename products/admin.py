@@ -19,7 +19,6 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
 from django.views.decorators.debug import sensitive_post_parameters
 from django_summernote.admin import SummernoteModelAdmin
-
 from innovatix.core.admin import CoreAdmin
 from payments.admin import PaymentInline
 from products.constants import ENTRY_COST_HELP_TEXT, RECURRING_PRICE_HELP_TEXT
@@ -175,6 +174,7 @@ class MembershipAdmin(CoreAdmin, SummernoteModelAdmin):
         "display_entry_cost",
         "subscription_count_link",
         "is_visible",
+        "is_purchasable",
     )
     list_display_links = ("name",)
     add_fieldsets = (
@@ -188,6 +188,7 @@ class MembershipAdmin(CoreAdmin, SummernoteModelAdmin):
                     "recurring_price",
                     "recurring_payment",
                     "is_visible",
+                    "is_purchasable",
                 )
             },
         ),
@@ -204,6 +205,7 @@ class MembershipAdmin(CoreAdmin, SummernoteModelAdmin):
                     "entry_cost",
                     "recurring_price",
                     "is_visible",
+                    "is_purchasable",
                     "subscription_count_link",
                 )
             },
@@ -217,6 +219,7 @@ class MembershipAdmin(CoreAdmin, SummernoteModelAdmin):
     )
     list_filter = (
         "is_visible",
+        "is_purchasable",
         "created_at",
     )
     save_on_top = True

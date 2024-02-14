@@ -7,7 +7,6 @@ from django.template.defaultfilters import date
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.core.templatetags.core_tags import dollar_format
 from products.constants import (
     RECURRING_INTERVAL_CHOICES,
@@ -39,6 +38,13 @@ class Membership(models.Model):
         help_text=RECURRING_PAYMENT_INTERVAL_HELP_TEXT,
     )
     is_visible = models.BooleanField(_("Show on public site"), default=True)
+    is_purchasable = models.BooleanField(
+        _("Purchasable"),
+        help_text=_(
+            "Customers can purchase this even if it is not visible in the home page."
+        ),
+        default=True,
+    )
     created_at = models.DateTimeField(_("Created"), auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
