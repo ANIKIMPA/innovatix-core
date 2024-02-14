@@ -1,6 +1,7 @@
 from typing import Any
 
 from django.db.models.query import QuerySet
+from django.http import Http404
 from django.urls import reverse_lazy
 from django.views.generic import DetailView
 
