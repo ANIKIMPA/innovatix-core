@@ -55,19 +55,19 @@ def payment_method_update_or_create(stripe_payment_intent: stripe.PaymentMethod)
     payment_method_id = stripe_payment_intent["payment_method"]
     stripe_payment_method = stripe.PaymentMethod.retrieve(payment_method_id)
 
-    billing_details = stripe_payment_method.billing_details
-    card_details = stripe_payment_method.card
+    billing_details = stripe_payment_method.get("billing_details", {})
+    card_details = stripe_payment_method.get("card", {})
 
     PaymentMethod.objects.update_or_create(
-        external_payment_method_id=stripe_payment_method.id,
+        external_payment_method_id=stripe_payment_method["id"],
         defaults={
-            "external_payment_method_id": stripe_payment_method.id,
+            "external_payment_method_id": stripe_payment_method["id"],
             "user": customer,
-            "card_name": billing_details.name or "",
-            "type": getattr(card_details, "brand", None),
-            "last_four": getattr(card_details, "last4", None),
-            "expiration_month": getattr(card_details, "exp_month", None),
-            "expiration_year": getattr(card_details, "exp_year", None),
+            "card_name": billing_details.get("name", ""),
+            "type": card_details.get("brand", ""),
+            "last_four": card_details.get("last4", ""),
+            "expiration_month": card_details.get("exp_month", ""),
+            "expiration_year": card_details.get("exp_year", ""),
         },
     )
 
