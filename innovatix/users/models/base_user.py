@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
 from innovatix.core.services.phone_number_service import PhoneNumberService
 from innovatix.users.constants import DEFAULT_COUNTRY_CODE
 
@@ -107,7 +108,7 @@ class BaseUser(AbstractBaseUser):
         verbose_name_plural = _("usuarios")
         abstract = True
 
-    def format_phone_number(self, country_code=DEFAULT_COUNTRY_CODE):
+    def format_phone_number(self, country_code: str = DEFAULT_COUNTRY_CODE):
         if not self.phone_number:
             return self.phone_number
 
@@ -131,6 +132,6 @@ class BaseUser(AbstractBaseUser):
     def __str__(self) -> str:
         return self.get_full_name()
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: dict[str, Any]) -> None:
         self.phone_number = self.format_phone_number()
         super().save(*args, **kwargs)

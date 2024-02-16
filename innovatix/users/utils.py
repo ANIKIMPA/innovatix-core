@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING, Any
 
 from innovatix.users.models import ContactModel, CustomerUser
 
+from .models import Company
+
 if TYPE_CHECKING:
     from innovatix.geo_territories.models import Country, Province
 
@@ -22,6 +24,23 @@ def create_or_update_customer_user(
 
 def create_contact(**kwargs: Any) -> ContactModel:
     return ContactModel.objects.create(**kwargs)
+
+
+def create_fake_company(province: Province, country: Country, **kwargs: Any) -> Company:
+    model_params = {
+        "name": "Test Company",
+        "address": "123 Test Street",
+        "city": "Test City",
+        "state": province,
+        "country": country,
+        "phone": "1234567890",
+        "email": "test@example.com",
+        "website": "http://www.example.com",
+        "preferences": "Frecuencia (e.g. 'Diario', 'Dos veces por semana'): Dos veces por semana\n\nDías de la semana: Martes y Viernes\n\nHorario: 10:00 a.m. a 12:00 p.m.",
+    }
+    model_params.update(**kwargs)
+
+    return Company.objects.create(**model_params)
 
 
 # Fake data

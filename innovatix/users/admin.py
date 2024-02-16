@@ -7,12 +7,16 @@ from django.db.models.functions import Concat
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
+from innovatix.core.admin import CoreAdmin
 from innovatix.users.forms import CustomerUserChangeForm, CustomerUserCreationForm
 from innovatix.users.models import Company, ContactModel, CustomerUser, ProgramUser, Tag
 
+from .forms import CompanyAddForm
+
 
 @admin.register(Company)
-class CompanyAdmin(admin.ModelAdmin):
+class CompanyAdmin(CoreAdmin):
+    add_form = CompanyAddForm
     list_display = ["name", "city", "state", "country", "email"]
     search_fields = ["name", "city", "state", "country", "email"]
     list_filter = ["country", "state"]

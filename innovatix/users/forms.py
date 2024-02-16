@@ -1,4 +1,7 @@
+from typing import Any
+
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 
 from innovatix.core.forms import CoreModelForm
@@ -77,3 +80,12 @@ class CustomerUserForm(CoreModelForm):
             "zip",
             "accept_terms_condition",
         ]
+
+
+class CompanyAddForm(ModelForm):
+
+    def __init__(self, *args: Any, **kwargs: dict[str, Any]) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields["preferences"].initial = (
+            "Frecuencia (e.g. 'Diario', 'Dos veces por semana'): \n\nDías de la semana: \n\nHorario: "
+        )

@@ -8,22 +8,17 @@ from innovatix.core.tests import BaseTestCase
 from innovatix.geo_territories.utils import get_default_country, get_default_province
 from innovatix.users.forms import ContactForm
 from innovatix.users.models import ContactModel, CustomerUser
-from innovatix.users.utils import create_fake_contact, create_fake_customer_user
+from innovatix.users.utils import (
+    create_fake_company,
+    create_fake_contact,
+    create_fake_customer_user,
+)
 
 
 class CompanyModelTest(TestCase):
     def setUp(self):
-        self.company = Company.objects.create(
-            name="Test Company",
-            address="123 Test Street",
-            city="Test City",
-            state=get_default_province(),
-            country=get_default_country(),
-            zip="12345",
-            phone="1234567890",
-            email="test@example.com",
-            website="http://www.example.com",
-            posting_frequency="Daily",
+        self.company = create_fake_company(
+            get_default_province(), get_default_country()
         )
 
     def test_company_attributes(self):
@@ -36,7 +31,10 @@ class CompanyModelTest(TestCase):
         self.assertEqual(self.company.phone, "1234567890")
         self.assertEqual(self.company.email, "test@example.com")
         self.assertEqual(self.company.website, "http://www.example.com")
-        self.assertEqual(self.company.posting_frequency, "Daily")
+        self.assertEqual(
+            self.company.preferences,
+            "Frecuencia (e.g. 'Diario', 'Dos veces por semana'): Dos veces por semana\n\nDías de la semana: Martes y Viernes\n\nHorario: 10:00 a.m. a 12:00 p.m.",
+        )
 
 
 class ContactFormViewTest(BaseTestCase):

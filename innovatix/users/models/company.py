@@ -1,6 +1,9 @@
+from typing import Any
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from innovatix.core.services.phone_number_service import PhoneNumberService
 from innovatix.geo_territories.utils import get_default_country
 
 
@@ -18,7 +21,7 @@ class Company(models.Model):
         phone (str): The phone number of the company.
         email (str): The email address of the company.
         website (str): The website URL of the company.
-        posting_frequency (str): The frequency at which the company posts.
+        preferences (str): The posting preferences for the company.
         is_individual (bool): Whether the record represents an individual business owner.
     """
 
@@ -36,14 +39,22 @@ class Company(models.Model):
         default=get_default_country,
     )
     zip = models.CharField(_("zip code"), max_length=5)
-    phone = models.CharField(_("phone"), max_length=20)
+    phone = models.CharField(
+        _("phone"),
+        max_length=20,
+        validators=[PhoneNumberService.validate_phone_number],
+    )
     email = models.EmailField(_("email"))
     website = models.URLField(_("website"), null=True, blank=True)
-    posting_frequency = models.CharField(_("posting frequency"), max_length=100)
     is_individual = models.BooleanField(_("is individual"), default=False)
+    preferences = models.TextField(_("preferences"), blank=True, default="")
 
     def __str__(self):
         return self.name
+
+    def save(self, *args: Any, **kwargs: dict[str, Any]) -> None:
+        self.phone = PhoneNumberService.format_phone_number(self.phone)
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Company"
