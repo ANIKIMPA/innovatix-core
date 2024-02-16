@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
@@ -5,12 +7,38 @@ from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
-
+from innovatix.geo_territories.models import Country, Province
 from innovatix.geo_territories.utils import get_default_country
 from innovatix.users.constants import DEFAULT_COUNTRY_CODE, LANGUAGE_CHOICES
 
-from .base_user import BaseUser
+from .base_user import BaseUser, BaseUserManager
 from .company import Company
+
+
+class CustomerUserManager(BaseUserManager):
+    """
+    Custom manager for CustomerUser model.
+    """
+
+    def create_or_update_customer_user(
+        self,
+        province: Province,
+        country: Country,
+        email: str,
+        first_name: str,
+        last_name: str,
+        password: str | None = None,
+        **extra_fields: dict[str, Any],
+    ) -> tuple["BaseUser", bool]:
+        return self._create_or_update_user(
+            email,
+            first_name,
+            last_name,
+            password,
+            province=province,
+            country=country,
+            **extra_fields,
+        )
 
 
 class AbstractCustomerUser(BaseUser):
@@ -89,6 +117,8 @@ class AbstractCustomerUser(BaseUser):
         default="spanish",
     )
     pay_tax = models.BooleanField(_("Recolectar impuesto"), default=True)
+
+    objects = CustomerUserManager()
 
     class Meta:
         verbose_name = _("customer")

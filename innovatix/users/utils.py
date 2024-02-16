@@ -17,7 +17,7 @@ def create_or_update_customer_user(
     }
     model_params.update(**kwargs)
 
-    return CustomerUser.objects.create_or_update_user(**model_params)
+    return CustomerUser.objects.create_or_update_customer_user(**model_params)
 
 
 def create_contact(**kwargs: Any) -> ContactModel:
