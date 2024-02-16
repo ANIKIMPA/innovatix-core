@@ -47,7 +47,7 @@ def handle_payment_creation(event: stripe.Event):
         raise
 
 
-def payment_method_update_or_create(stripe_payment_intent: stripe.PaymentMethod):
+def payment_method_update_or_create(stripe_payment_intent: stripe.PaymentIntent):
     customer = CustomerUser.objects.get(
         external_customer_id=stripe_payment_intent.customer
     )

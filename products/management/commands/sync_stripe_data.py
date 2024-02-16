@@ -1,5 +1,7 @@
 from datetime import datetime
+from typing import Any
 
+import stripe
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -10,7 +12,7 @@ from payments.models import Payment, PaymentMethod
 from payments.webhook import payment_method_update_or_create
 from products.models import UserMembership
 from products.services import payment_gateway
-from products.webhook import SubscriptionStripeWebhook
+from products.webhook import handle_update_or_create
 
 
 class Command(BaseCommand):
@@ -19,9 +21,9 @@ class Command(BaseCommand):
     def __init__(self):
         super().__init__()
 
-        self.customer_ids = []
+        self.customer_ids: list[str] = []
 
-    def handle(self, *args, **kwargs):
+    def handle(self, *args: Any, **kwargs: dict[str, Any]):
         self.sync_customers()
         self.sync_payment_methods()
         self.sync_subscriptions()
@@ -42,29 +44,34 @@ class Command(BaseCommand):
             self.customer_ids.append(stripe_customer.id)
 
     def sync_subscriptions(self):
-        stripe_subscriptions = payment_gateway.fetch_all("Subscription", limit=100)
+        stripe_subscriptions: list[stripe.Subscription] = payment_gateway.fetch_all(
+            "Subscription", limit=100
+        )
         for stripe_subscription in stripe_subscriptions:
             # Convert timestamp to a datetime object
             dt_object = datetime.fromtimestamp(stripe_subscription.created)
             aware_dt_object = timezone.make_aware(dt_object)
 
-            subscription_webhook = SubscriptionStripeWebhook()
-            subscription_webhook.handle_update_or_create(
+            handle_update_or_create(
                 stripe_subscription=stripe_subscription, date_subscribed=aware_dt_object
             )
 
     def sync_payment_methods(self):
         for stripe_customer_id in self.customer_ids:
-            stripe_payment_methods = payment_gateway.fetch_all(
-                "PaymentMethod", customer=stripe_customer_id, limit=100
+            stripe_payment_intents: list[stripe.PaymentIntent] = (
+                payment_gateway.fetch_all(
+                    "PaymentIntent", customer=stripe_customer_id, limit=100
+                )
             )
-            for stripe_payment_method in stripe_payment_methods:
-                payment_method_update_or_create(stripe_payment_method)
+            for stripe_payment_intent in stripe_payment_intents:
+                payment_method_update_or_create(stripe_payment_intent)
 
     def sync_payments(self):
         Payment.objects.all().delete()
 
-        stripe_payments = payment_gateway.fetch_all("PaymentIntent", limit=100)
+        stripe_payments: list[stripe.PaymentIntent] = payment_gateway.fetch_all(
+            "PaymentIntent", limit=100
+        )
         for stripe_payment in stripe_payments:
             dt_object = datetime.fromtimestamp(stripe_payment.created)
             aware_dt_object = timezone.make_aware(dt_object)

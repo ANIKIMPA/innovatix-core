@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Any
 from django.conf import settings
 from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.core.services.abstract_payment_gateways import CoreAbstractPaymentGateway
 
 if TYPE_CHECKING:
@@ -88,9 +87,11 @@ class CoreStripePaymentGateway(CoreAbstractPaymentGateway):
         try:
             return self.stripe.Customer.delete(customer_id)
         except Exception as err:
-            logger.error("Failed deleting Stripe customer: {}")
+            logger.error(f"Failed deleting Stripe customer: {err}")
 
-    def fetch_all(self, resource: str, all=True, **kwargs) -> list:
+    def fetch_all(
+        self, resource: str, all: bool = True, **kwargs: dict[str, Any]
+    ) -> list[Any]:
         response = {"has_more": True}
         starting_after = None
 
