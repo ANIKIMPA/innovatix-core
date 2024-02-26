@@ -22,6 +22,7 @@ class Company(models.Model):
         email (str): The email address of the company.
         website (str): The website URL of the company.
         preferences (str): The posting preferences for the company.
+        description (str): The description of the company.
         is_individual (bool): Whether the record represents an individual business owner.
     """
 
@@ -48,6 +49,7 @@ class Company(models.Model):
     website = models.URLField(_("website"), null=True, blank=True)
     is_individual = models.BooleanField(_("is individual"), default=False)
     preferences = models.TextField(_("preferences"), blank=True, default="")
+    description = models.TextField(_("description"), blank=True, default="")
 
     def __str__(self):
         return self.name

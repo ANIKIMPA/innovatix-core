@@ -155,7 +155,7 @@
                             {% block extra %}
                                 {{form.accept_terms_condition}}
                                 <label class="form-check-label" for="{{form.accept_terms_condition.id_for_label}}">
-                                    Acepto los <a href="">Términoss y Condiciones</a> <span class="text-danger">*</span>
+                                    Acepto los <a href="{% url 'terms-conditions' %}">Términos y Condiciones</a> <span class="text-danger">*</span>
                                 </label>
                                 <div class="text-danger fst-italic">
                                     <ul class="error-list">
