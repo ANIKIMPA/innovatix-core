@@ -19,7 +19,7 @@ To ensure the proper functioning of the `innovatix` app within your Django proje
 - **Custom User Model:** If you are using the custom user model provided by `innovatix`, update your `AUTH_USER_MODEL` in your project's `settings.py` as follows:
 
     ```python
-    AUTH_USER_MODEL = "users.ProgramUser"
+    AUTH_USER_MODEL = "users.CustomerUser"
     ```
 
     This setting is essential for utilizing the custom user model implemented in the `innovatix` app.

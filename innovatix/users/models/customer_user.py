@@ -1,14 +1,14 @@
 from typing import Any
 
-from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
+from allauth.account.models import EmailAddress
+from django.contrib.auth.models import PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
-from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
+
 from innovatix.geo_territories.models import Country, Province
-from innovatix.geo_territories.utils import get_default_country
+from innovatix.geo_territories.utils import get_default_country, get_default_province
 from innovatix.users.constants import DEFAULT_COUNTRY_CODE, LANGUAGE_CHOICES
 
 from .base_user import BaseUser, BaseUserManager
@@ -19,6 +19,49 @@ class CustomerUserManager(BaseUserManager):
     """
     Custom manager for CustomerUser model.
     """
+
+    def create_user(
+        self,
+        email: str,
+        first_name: str,
+        last_name: str,
+        password: str | None = None,
+        **extra_fields: dict[str, Any],
+    ) -> "CustomerUser":
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
+        return self._create_user(email, first_name, last_name, password, **extra_fields)
+
+    def create_superuser(
+        self,
+        email: str,
+        first_name: str,
+        last_name: str,
+        password: str | None = None,
+        **extra_fields: dict[str, Any],
+    ) -> "CustomerUser":
+        """
+        Creates and saves a superuser with the given email, first name, last name and password.
+
+        The django-allauth library uses the EmailAddress model to associate email addresses with users.
+        When a superuser is created, an associated EmailAddress instance is also created and marked as
+        verified and primary. This is necessary because the django-allauth library expects an EmailAddress
+        instance to exist for each user.
+        """
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
+
+        user = self._create_user(email, first_name, last_name, password, **extra_fields)
+
+        # Create EmailAddress instance for the new user
+        EmailAddress.objects.create(user=user, email=email, verified=True, primary=True)
+
+        return user
 
     def create_or_update_customer_user(
         self,
@@ -41,9 +84,9 @@ class CustomerUserManager(BaseUserManager):
         )
 
 
-class AbstractCustomerUser(BaseUser):
+class CustomerUser(BaseUser, PermissionsMixin):
     """
-    An abstract base class for CustomerUser model.
+    A class for CustomerUser model.
     """
 
     external_customer_id = models.CharField(
@@ -78,11 +121,11 @@ class AbstractCustomerUser(BaseUser):
         _("Cliente aceptó los Términos y Condiciones."),
         default=False,
     )
-    address1 = models.CharField(_("dirección"), max_length=150)
+    address1 = models.CharField(_("dirección"), max_length=150, default="")
     address2 = models.CharField(
-        _("apartamento, suite, etc."), max_length=150, blank=True
+        _("apartamento, suite, etc."), max_length=150, blank=True, default=""
     )
-    city = models.CharField(_("ciudad"), max_length=75)
+    city = models.CharField(_("ciudad"), max_length=75, default="")
     company = models.ForeignKey(
         Company,
         verbose_name=_("compañía"),
@@ -91,7 +134,10 @@ class AbstractCustomerUser(BaseUser):
         blank=True,
     )
     province = models.ForeignKey(
-        "geo_territories.Province", verbose_name=_("estado"), on_delete=models.PROTECT
+        "geo_territories.Province",
+        verbose_name=_("estado"),
+        on_delete=models.PROTECT,
+        default=get_default_province,
     )
     country = models.ForeignKey(
         "geo_territories.Country",
@@ -106,7 +152,7 @@ class AbstractCustomerUser(BaseUser):
         ),
         blank=True,
     )
-    zip = models.CharField(_("código postal"), max_length=5)
+    zip = models.CharField(_("código postal"), max_length=5, default="")
     notes = models.TextField(
         _("notas"), blank=True, help_text=_("Agrega notas sobre tu cliente.")
     )
@@ -117,6 +163,11 @@ class AbstractCustomerUser(BaseUser):
         default="spanish",
     )
     pay_tax = models.BooleanField(_("Recolectar impuesto"), default=True)
+    is_staff = models.BooleanField(
+        _("staff status"),
+        default=False,
+        help_text=_("Designates whether the user can log into the admin panel."),
+    )
 
     objects = CustomerUserManager()
 
@@ -143,27 +194,10 @@ class AbstractCustomerUser(BaseUser):
         # We use str.zfill to pad the count with leading zeros
         return f"{current_date.year}-{str(current_date.month).zfill(2)}-{str(count + 1).zfill(4)}"
 
-    def generate_password(self):
-        # Generate a random password
-        while True:
-            password = get_random_string(
-                length=10,
-                allowed_chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()",
-            )
-            try:
-                validate_password(password, self)
-            except ValidationError:
-                pass  # If the password is invalid, try again
-            else:
-                return password  # If the password is valid, return it
-
-    def save(self, *args, **kwargs: str):
+    def save(self, *args: Any, **kwargs: dict[str, Any]):
         # Only set the partner_number and password if this instance is being created
         if not self.pk:
             self.partner_number = self.generate_partner_number()
-
-            password = self.generate_password()
-            self.set_password(password)
 
         super().save(*args, **kwargs)
 
@@ -172,14 +206,3 @@ class AbstractCustomerUser(BaseUser):
             return self.email
 
         return self.get_full_name()
-
-    class Meta:
-        abstract = True
-
-
-class CustomerUser(AbstractCustomerUser):
-    """
-    A class implementing a fully featured CustomerUser model.
-    """
-
-    pass

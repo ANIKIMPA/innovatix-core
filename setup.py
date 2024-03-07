@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="innovatix-core",
-    version="0.2.8",
+    version="0.3.0",
     install_requires=[
         "Django>=4.2.3",
         "django-summernote>=0.8.20.0",

@@ -5,7 +5,6 @@ from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.core.services.phone_number_service import PhoneNumberService
 from innovatix.users.constants import DEFAULT_COUNTRY_CODE
 
@@ -18,13 +17,41 @@ class BaseUserManager(UserManager):
         """
         return self.model.objects.filter(email=email).exists()
 
+    def _create_user(
+        self,
+        email: str,
+        first_name: str,
+        last_name: str,
+        password: str | None,
+        **extra_fields: dict[str, Any],
+    ) -> tuple["BaseUser", bool]:
+        """
+        Create and save a user with the given email, first name, last name and password.
+        """
+        if not email:
+            raise ValueError("The given email must be set")
+        if self.email_exists(email):
+            raise ValueError("A user with that email already exists")
+        if not first_name:
+            raise ValueError("The first name must be provided")
+        if not last_name:
+            raise ValueError("The last name must be provided")
+
+        email = self.normalize_email(email)
+        user = self.model(
+            email=email, first_name=first_name, last_name=last_name, **extra_fields
+        )
+        user.password = make_password(password)
+        user.save(using=self._db)
+        return user
+
     def _create_or_update_user(
         self,
         email: str,
         first_name: str,
         last_name: str,
         password: str | None,
-        **extra_fields: dict[str, Any]
+        **extra_fields: dict[str, Any],
     ) -> tuple["BaseUser", bool]:
         """
         Create and save a user with the given email, first name, last name and password.
@@ -57,7 +84,7 @@ class BaseUserManager(UserManager):
         first_name: str,
         last_name: str,
         password: str | None = None,
-        **extra_fields: dict[str, Any]
+        **extra_fields: dict[str, Any],
     ) -> tuple["BaseUser", bool]:
         return self._create_or_update_user(
             email, first_name, last_name, password, **extra_fields

@@ -6,10 +6,9 @@ from django.db.models import CharField, Value
 from django.db.models.functions import Concat
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.core.admin import CoreAdmin
 from innovatix.users.forms import CustomerUserChangeForm, CustomerUserCreationForm
-from innovatix.users.models import Company, ContactModel, CustomerUser, ProgramUser, Tag
+from innovatix.users.models import Company, ContactModel, CustomerUser, Tag
 
 from .forms import CompanyAddForm
 
@@ -84,6 +83,17 @@ class CustomerUserAdmin(UserAdmin):
             },
         ),
         (
+            _("Permissions"),
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "user_permissions",
+                )
+            },
+        ),
+        (
             _("Marketing settings"),
             {"fields": ("accept_email_marketing", "accept_sms_marketing")},
         ),
@@ -111,7 +121,13 @@ class CustomerUserAdmin(UserAdmin):
             },
         ),
     )
-    list_display = ("email", "display_full_name", "date_joined", "is_active")
+    list_display = (
+        "email",
+        "display_full_name",
+        "date_joined",
+        "is_staff",
+        "is_active",
+    )
     list_filter = (
         "is_active",
         "date_joined",
@@ -139,10 +155,16 @@ class CustomerUserAdmin(UserAdmin):
         return obj.get_full_name()
 
     def get_readonly_fields(
-        self, request: HttpRequest, obj: CustomerUser | None
+        self, request: HttpRequest, obj: CustomerUser | None = None
     ) -> list[str]:
         if not obj:
             return []
+
+        if obj and obj.pk == 1:
+            return [
+                "first_name",
+                "last_name",
+            ]
 
         return [
             "partner_number",
@@ -181,75 +203,3 @@ class CustomerUserAdmin(UserAdmin):
     #             ",".join(str(pk) for pk in selected),
     #         )
     #     )
-
-
-@admin.register(ProgramUser)
-class ProgramUserAdmin(UserAdmin):
-    fieldsets = (
-        (None, {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("first_name", "last_name", "phone_number")}),
-        (
-            _("Permissions"),
-            {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "user_permissions",
-                )
-            },
-        ),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
-    )
-    add_fieldsets = (
-        (
-            None,
-            {
-                "classes": ("collapsed",),
-                "fields": (
-                    "first_name",
-                    "last_name",
-                    "email",
-                    "phone_number",
-                    "password1",
-                    "password2",
-                ),
-            },
-        ),
-    )
-    list_display = ("display_full_name", "email", "is_staff")
-    search_fields = ("first_name", "last_name", "email")
-    ordering = (
-        "first_name",
-        "last_name",
-        "email",
-    )
-    readonly_fields = (
-        "last_login",
-        "date_joined",
-    )
-    model = ProgramUser
-
-    @admin.display(description="Full Name", ordering="full_name")
-    def display_full_name(self, obj: CustomerUser):
-        return obj.get_full_name()
-
-    def get_readonly_fields(
-        self, request: HttpRequest, obj: ProgramUser | None = None
-    ) -> list[str] | tuple[Any, ...]:
-        readonly_fields = super().get_readonly_fields(request, obj)
-        if obj and obj.pk == 1:
-            readonly_fields += (
-                "first_name",
-                "last_name",
-            )
-
-        return readonly_fields
-
-    def has_delete_permission(
-        self, request: HttpRequest, obj: ProgramUser | None = None
-    ) -> bool:
-        if obj and obj.pk == 1:
-            return False
-
-        return super().has_delete_permission(request, obj)

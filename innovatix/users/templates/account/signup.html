@@ -1,0 +1,187 @@
+{% load static %}
+{% load i18n %}
+{% load allauth account %}
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'ipasite\assets\images\favicon.ico' %}" type="image/x-icon">
+    <title>Sign In - Innovatix Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .login-container {
+            min-height: 100vh;
+        }
+
+        .login-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-btn {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        form {
+            color: rgb(57, 57, 57);
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .footer {
+            width: 100%;
+            display: flex;
+            -moz-box-pack: center;
+            justify-content: center;
+            -moz-box-align: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .about-us:after {
+            background-image: url({% static 'ipasite/assets/images/about-bg.jpg' %});
+            width: 100%;
+            height: 100%;
+            content: '';
+            position: absolute;
+            background-repeat: no-repeat;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .about-us .right-image {
+            position: relative;
+            z-index: 1;
+            margin-top: 30px;
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 1;
+            margin-top: 30px;
+            width: 470px;
+        }
+    </style>
+</head>
+
+<body class="login-container lg:container mx-auto lg:overflow-hidden">
+    <div id="about" class="about-us w-full">
+        <div class="flex flex-wrap">
+            <div class="hidden lg:block lg:w-1/2">
+                <div class="right-image">
+                    <img src="{% static 'ipasite/assets/images/about-right-dec.png' %}" alt="">
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 grid justify-items-center">
+                <div class="lg:self-center login-card max-w-xl p-10 text-login">
+                    <div>
+                        <img src="{% static 'ipasite/assets/images/id-logo-removebg.png' %}" height="60" width="60"
+                            alt="Logo" class="mb-4">
+                        <h1 class="text-2xl font-bold mb-6">{% translate "Bienvenido a Innovatix Digital" %} 👋</h1>
+                    </div>
+                    <form method="post" action="{% url 'account_signup' %}">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="mb-4">
+                                <div class="text-red-600 italic">
+                                    <ul class="error-list bg-red-100 border-l-4 border-red-500 p-1">
+                                        {% for error in form.non_field_errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-4">
+                            {{ form.email }}
+                            {% if form.email.help_text %}
+                                <span style="font-size: 0.875em;" class="mt-1 text-zinc-500">{{ form.email.help_text }}</span>
+                            {% endif %}
+                            {% if form.email.errors %}
+                                <div class="text-red-600 italic">
+                                    <ul class="error-list bg-red-100 border-l-4 border-red-500 p-1">
+                                        {% for error in form.email.errors %}
+                                            <li>{{error}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-4">
+                            {{ form.password1 }}
+                            {% if form.password1.help_text %}
+                                <span style="font-size: 0.875em;" class="mt-1 text-zinc-500">{{ form.password1.help_text }}</span>
+                            {% endif %}
+                            {% if form.password1.errors %}
+                                <div class="text-red-600 italic">
+                                    <ul class="error-list bg-red-100 border-l-4 border-red-500 p-1">
+                                        {% for error in form.password1.errors %}
+                                            <li>{{error}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-4">
+                            {{ form.password2 }}
+                            {% if form.password2.help_text %}
+                                <span style="font-size: 0.875em;" class="mt-1 text-zinc-500">{{ form.password2.help_text }}</span>
+                            {% endif %}
+                            {% if form.password2.errors %}
+                                <div class="text-red-600 italic">
+                                    <ul class="error-list bg-red-100 border-l-4 border-red-500 p-1">
+                                        {% for error in form.password2.errors %}
+                                            <li>{{error}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-800 text-white w-full py-2 rounded-lg mb-4">{% translate "Registrarse" %}</button>
+
+                        <div class="text-center mb-6">{% translate "¿Ya tienes cuenta?" %} <a href="{% url 'account_login' %}" class="text-blue-600 hover:text-blue-800">{% translate "Inicia Sesión" %}</a></div>
+                    </form>
+                    {% if SOCIALACCOUNT_ENABLED %}
+                        <div class="grid grid-cols-1 gap-4">
+                            {% get_providers as socialaccount_providers %}
+                            {% if socialaccount_providers %}
+                                {% element provider_list %}
+                                    {% for provider in socialaccount_providers %}
+                                        <a href="{% provider_login_url provider.id %}?next=/" class="social-btn hover:bg-gray-50">
+                                            <img src="{% static 'ipasite/assets/images/' %}{{provider.id}}-social-icon.png" alt="{{provider.name}}" class="w-5" />
+                                            {{provider.name}}
+                                        </a>
+                                    {% endfor %}
+                                {% endelement %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="footer z-10">
+                    <div class="mt-6 text-center">
+                        {% translate "¿Necesitas ayuda? Contáctanos:" %} <a href="mailto:{{company_email}}"
+                            class="text-blue-600 hover:text-blue-800">{{company_email}}</a>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Copyright © 2024 {{ company_name }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

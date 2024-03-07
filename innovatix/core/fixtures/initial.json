@@ -10,7 +10,7 @@
         }
     },
     {
-        "model": "users.programuser",
+        "model": "users.CustomerUser",
         "pk": 1,
         "fields": {
             "password": "pbkdf2_sha256$600000$CuQXuqk6bu5T7pGfj6l578$E/YD6Q8X0uKiMhrJaC6C0XA4yB+aihxzv6Y+TVrZFq4=",

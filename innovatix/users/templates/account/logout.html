@@ -1,0 +1,51 @@
+{% extends 'account/base.html' %}
+{% load allauth i18n %}
+{% load static %}
+
+{% block head %}
+    {{ block.super }}
+    <title>{% trans "Sign Out" %} - Innovatix Digital</title>
+{% endblock head %}
+
+{% block content %}
+<div class="login-container lg:container mx-auto lg:overflow-hidden">
+    <div id="about" class="about-us pt-0">
+        <div class="flex flex-wrap">
+            <div class="hidden lg:block lg:w-1/2 ">
+                <div class="relative z-10 right-image mt-0">
+                    <img src="{% static 'ipasite/assets/images/about-right-dec.png' %}" alt="">
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 grid justify-items-center">
+                    <div class="lg:self-center relative z-10 bg-white rounded-lg shadow-md w-96 p-10">
+                        <h1 class="text-4xl font-bold text-gray-800 mb-8">{% trans "Sign Out" %}</h1>
+                        <p class="mb-4 text-neutral-800">{% trans 'Are you sure you want to sign out?' %}</p>
+                        {% url 'account_logout' as action_url %}
+                        {% element form method="post" action=action_url no_visible_fields=True %}
+                            {% slot body %}
+                                {% csrf_token %}
+                                {% if redirect_field_value %}
+                                    <input type="hidden"
+                                        name="{{ redirect_field_name }}"
+                                        value="{{ redirect_field_value }}" />
+                                {% endif %}
+                            {% endslot %}
+                            {% slot actions %}
+                                <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md">
+                                    {% trans 'Sign Out' %}
+                                </button>
+                            {% endslot %}
+                        {% endelement %}
+                    </div>
+                <div class="footer z-10">
+                    <div class="mt-6 text-center">
+                        {% translate "¿Necesitas ayuda? Contáctanos:" %} <a href="mailto:{{company_email}}"
+                            class="text-blue-600 hover:text-blue-800">{{company_email}}</a>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Copyright © 2024 {{ company_name }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

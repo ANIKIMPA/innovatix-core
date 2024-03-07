@@ -1,6 +1,6 @@
 from django.urls import path
 
-from innovatix.users.views import ContactFormView
+from .views import ContactFormView
 
 app_name = "users"
 

@@ -3,12 +3,11 @@
 import django.core.validators
 import django.db.models.deletion
 import django.utils.timezone
-from django.db import migrations, models
-
 import innovatix.core.services.phone_number_service
 import innovatix.geo_territories.utils
 import innovatix.users.models.base_user
-import innovatix.users.models.program_user
+import innovatix.users.models.customer_user
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -192,7 +191,7 @@ class Migration(migrations.Migration):
                 "verbose_name_plural": "Administrators",
             },
             managers=[
-                ("objects", innovatix.users.models.program_user.ProgramUserManager()),
+                ("objects", innovatix.users.models.customer_user.CustomerUserManager()),
             ],
         ),
         migrations.CreateModel(

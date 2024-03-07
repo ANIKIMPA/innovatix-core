@@ -1,9 +1,9 @@
 from typing import Any
 
+from allauth.account.forms import LoginForm, SignupForm
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.core.forms import CoreModelForm
 from innovatix.core.services import payment_gateway
 from innovatix.users.models import ContactModel, CustomerUser
@@ -89,3 +89,31 @@ class CompanyAddForm(ModelForm):
         self.fields["preferences"].initial = (
             "Frecuencia (e.g. 'Diario', 'Dos veces por semana'): \n\nDías de la semana: \n\nHorario: "
         )
+
+
+class CustomerLoginForm(LoginForm):
+    def __init__(self, *args: Any, **kwargs: dict[str, Any]) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields["login"].widget.attrs[
+            "class"
+        ] = "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-600"
+
+        self.fields["password"].widget.attrs[
+            "class"
+        ] = "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-600"
+
+
+class CustomerSignupForm(SignupForm):
+    def __init__(self, *args: Any, **kwargs: dict[str, Any]) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields["email"].widget.attrs[
+            "class"
+        ] = "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-600"
+
+        self.fields["password1"].widget.attrs[
+            "class"
+        ] = "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-600"
+
+        self.fields["password2"].widget.attrs[
+            "class"
+        ] = "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-600"
