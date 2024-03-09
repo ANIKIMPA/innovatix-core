@@ -1,10 +1,76 @@
-{% extends 'account/base.html' %}
+{% extends 'site/base.html' %}
 {% load allauth i18n %}
 {% load static %}
 
 {% block head %}
     {{ block.super }}
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>{% trans "Sign Out" %} - Innovatix Digital</title>
+    <style>
+        .login-container {
+            min-height: 100vh;
+        }
+
+        .login-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-btn {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        form {
+            color: rgb(57, 57, 57);
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .footer {
+            width: 100%;
+            display: flex;
+            -moz-box-pack: center;
+            justify-content: center;
+            -moz-box-align: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .about-us:after {
+            background-image: url({% static 'ipasite/assets/images/about-bg.jpg' %});
+            width: 100%;
+            height: 100%;
+            content: '';
+            position: absolute;
+            background-repeat: no-repeat;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .about-us .right-image {
+            position: relative;
+            z-index: 1;
+            margin-top: 30px;
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 1;
+            margin-top: 30px;
+            width: 470px;
+        }
+    </style>
 {% endblock head %}
 
 {% block content %}
@@ -17,32 +83,32 @@
                 </div>
             </div>
             <div class="w-full lg:w-1/2 grid justify-items-center">
-                    <div class="lg:self-center relative z-10 bg-white rounded-lg shadow-md w-96 p-10">
-                        <h1 class="text-4xl font-bold text-gray-800 mb-8">{% trans "Sign Out" %}</h1>
-                        <p class="mb-4 text-neutral-800">{% trans 'Are you sure you want to sign out?' %}</p>
-                        {% url 'account_logout' as action_url %}
-                        {% element form method="post" action=action_url no_visible_fields=True %}
-                            {% slot body %}
-                                {% csrf_token %}
-                                {% if redirect_field_value %}
-                                    <input type="hidden"
-                                        name="{{ redirect_field_name }}"
-                                        value="{{ redirect_field_value }}" />
-                                {% endif %}
-                            {% endslot %}
-                            {% slot actions %}
-                                <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md">
-                                    {% trans 'Sign Out' %}
-                                </button>
-                            {% endslot %}
-                        {% endelement %}
-                    </div>
-                <div class="footer z-10">
+                <div class="lg:self-center relative z-10 bg-white rounded-lg shadow-md w-96 p-10">
+                    <h1 class="text-4xl font-bold text-gray-800 mb-8">{% trans "Sign Out" %}</h1>
+                    <p class="mb-4 text-neutral-800">{% trans 'Are you sure you want to sign out?' %}</p>
+                    {% url 'account_logout' as action_url %}
+                    {% element form method="post" action=action_url no_visible_fields=True %}
+                        {% slot body %}
+                            {% csrf_token %}
+                            {% if redirect_field_value %}
+                                <input type="hidden"
+                                    name="{{ redirect_field_name }}"
+                                    value="{{ redirect_field_value }}" />
+                            {% endif %}
+                        {% endslot %}
+                        {% slot actions %}
+                            <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md">
+                                {% trans 'Sign Out' %}
+                            </button>
+                        {% endslot %}
+                    {% endelement %}
+                </div>
+                <div class="footer z-10 text-xs text-zinc-400">
                     <div class="mt-6 text-center">
-                        {% translate "¿Necesitas ayuda? Contáctanos:" %} <a href="mailto:{{company_email}}"
+                        {% translate "¿Necesitas ayuda? Contáctanos a" %} <a href="mailto:{{company_email}}"
                             class="text-blue-600 hover:text-blue-800">{{company_email}}</a>
                     </div>
-                    <p class="text-xs text-gray-500 mt-2">Copyright © 2024 {{ company_name }}</p>
+                    <p class="mt-2">Copyright © 2024 {{ company_name }}</p>
                 </div>
             </div>
         </div>

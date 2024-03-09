@@ -1,0 +1,30 @@
+{% extends 'account/base.html' %}
+{% load i18n %}
+{% load allauth %}
+
+{% block head %}
+    <title>{% translate "Confirmación de Email" %} - Innovatix Digital</title>
+{% endblock head %}
+
+{% block card_title %}
+{% trans "Verify Your Email Address" %}
+{% endblock card_title %}
+
+{% block card_content %}
+    {% if messages %}
+        <div class="mb-4">
+            <ul>
+                {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <p>
+        {% translate "Le hemos enviado un correo electrónico para su verificación. Siga el enlace proporcionado para finalizar el proceso de registro. Si no ve el correo electrónico de verificación en su bandeja de entrada principal, revise su carpeta de correo no deseado. Comuníquese con nosotros si no recibe el correo electrónico de verificación dentro de unos minutos." %}
+    </p>
+{% endblock card_content %}
+
+{% block card_footer %}
+<hr class="my-5">
+<div class="text-center text-sm">{% translate "¿Ya tiene una cuenta?" %} <a href="{% url 'account_login' %}"
+            class="text-blue-600 hover:text-blue-800">{% translate "Iniciar Sesión" %}</a></div>
+{% endblock card_footer %}

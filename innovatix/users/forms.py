@@ -4,6 +4,7 @@ from allauth.account.forms import LoginForm, SignupForm
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
+
 from innovatix.core.forms import CoreModelForm
 from innovatix.core.services import payment_gateway
 from innovatix.users.models import ContactModel, CustomerUser
@@ -104,11 +105,14 @@ class CustomerLoginForm(LoginForm):
 
 
 class CustomerSignupForm(SignupForm):
-    def __init__(self, *args: Any, **kwargs: dict[str, Any]) -> None:
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["email"].widget.attrs[
             "class"
         ] = "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-600"
+        self.fields["email"].help_text = _(
+            "Después de someter, se enviará un correo electrónico de validación para verificar su correo electrónico."
+        )
 
         self.fields["password1"].widget.attrs[
             "class"

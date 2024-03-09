@@ -57,11 +57,12 @@ class CustomerUserAdmin(UserAdmin):
     fieldsets = (
         (
             None,
+            {"fields": ("external_customer_id", "partner_number", "email", "password")},
+        ),
+        (
+            _("Personal info"),
             {
                 "fields": (
-                    "external_customer_id",
-                    "partner_number",
-                    "email",
                     "first_name",
                     "last_name",
                     "phone_number",
