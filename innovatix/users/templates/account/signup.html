@@ -10,6 +10,13 @@
 {% endblock head %}
 
 {% block card_content %}
+{% if messages %}
+    <div class="mb-4">
+        <ul>
+            {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+        </ul>
+    </div>
+{% endif %}
 <form method="post" action="{% url 'account_signup' %}">
     {% csrf_token %}
     {% if form.non_field_errors %}
@@ -80,6 +87,11 @@
         </div>
         {% endif %}
     </div>
+    {% if redirect_field_value %}
+        <input type="hidden"
+                name="{{ redirect_field_name }}"
+                value="{{ redirect_field_value }}" />
+    {% endif %}
 
     <button type="submit" class="bg-purple-600 hover:bg-purple-800 text-white w-full py-2 rounded-lg mb-4">{% translate "Registrarse" %}</button>
 

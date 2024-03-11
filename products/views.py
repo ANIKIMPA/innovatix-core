@@ -1,16 +1,21 @@
 from typing import Any
 
+from django.contrib.auth.decorators import login_required
 from django.db.models.query import QuerySet
 from django.http import Http404
 from django.urls import reverse_lazy
-from django.views.generic import DetailView
-from innovatix.core.views import CoreFormView, CoreListView
-from innovatix.users.forms import CustomerUserForm
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.generic import DetailView, FormView
+from innovatix.core.views import CoreListView
+from innovatix.users.forms import CustomerInfoForm
+from innovatix.users.models import CustomerUser
 from products.models import Membership
 from products.services import payment_gateway
 
 
-class MembershipInfoView(CoreFormView):
+@method_decorator(login_required, name="dispatch")
+class MembershipInfoView(View):
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
         try:
@@ -41,16 +46,27 @@ class MembershipInfoView(CoreFormView):
 
 
 class CustomerInfoFormView(MembershipInfoView):
-    form_class = CustomerUserForm
+    form_class = CustomerInfoForm
     template_name = "products/customer_info_form.html"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
 
-        # Check if form data is in session
-        if "user_info" in self.request.session:
-            # Use session data to pre-populate form
-            kwargs["initial"] = self.request.session["user_info"]
+        customer: CustomerUser = self.request.user
+
+        kwargs["initial"] = {
+            "email": customer.email,
+            "phone_number": customer.phone_number,
+            "country": customer.country,
+            "first_name": customer.first_name,
+            "last_name": customer.last_name,
+            "address1": customer.address1,
+            "address2": customer.address2,
+            "city": customer.city,
+            "province": customer.province,
+            "zip": customer.zip,
+            "accept_terms_condition": customer.accept_terms_condition,
+        }
 
         return kwargs
 
@@ -60,8 +76,7 @@ class CustomerInfoFormView(MembershipInfoView):
             "payments:payment-info", kwargs={"slug": self.membership.slug}
         )
 
-    def form_valid(self, form: CustomerUserForm):
-        self.request.session["user_info"] = form.cleaned_data_with_model_pk()
+    def form_valid(self, form: CustomerInfoForm):
 
         return super().form_valid(form)
 
