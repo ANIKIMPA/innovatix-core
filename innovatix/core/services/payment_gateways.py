@@ -3,8 +3,8 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Any
 
+import stripe
 from django.conf import settings
-from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
 from innovatix.core.services.abstract_payment_gateways import CoreAbstractPaymentGateway
 
@@ -20,7 +20,6 @@ class CoreStripePaymentGateway(CoreAbstractPaymentGateway):
     """
 
     def __init__(self, api_key: str):
-        import stripe
 
         self.stripe = stripe
         self.stripe.api_key = api_key
@@ -68,7 +67,7 @@ class CoreStripePaymentGateway(CoreAbstractPaymentGateway):
 
         return self.stripe.Customer.create(**self._get_customer_data(obj, **kwargs))
 
-    def update_customer(self, obj: CustomerUser):
+    def update_customer(self, obj: CustomerUser) -> stripe.Customer:
         """
         Update Stripe customer.
 
@@ -76,12 +75,15 @@ class CoreStripePaymentGateway(CoreAbstractPaymentGateway):
         """
 
         try:
+            if not obj.external_customer_id:
+                return self.create_customer(obj)
+
             return self.stripe.Customer.modify(
                 obj.external_customer_id, **self._get_customer_data(obj)
             )
         except Exception as e:
-            logger.error(f"Failed updating Stripe customer: {e}")
-            return HttpResponse(status=500)
+            logger.error(f"Failed updating or creating Stripe customer: {e}")
+            raise
 
     def delete_customer(self, customer_id: str):
         try:

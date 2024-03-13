@@ -2,10 +2,10 @@ from typing import Any
 
 from allauth.account.forms import LoginForm, SignupForm
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
-from innovatix.core.forms import CoreModelForm, ReadOnlyField
+from innovatix.core.forms import CoreModelForm
 from innovatix.core.services import payment_gateway
 from innovatix.users.models import ContactModel, CustomerUser
 
@@ -62,11 +62,28 @@ class CustomerUserChangeForm(UserChangeForm):
 
 
 class CustomerInfoForm(CoreModelForm):
-
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: dict[str, Any]):
         super().__init__(*args, **kwargs)
         self.fields["accept_terms_condition"].required = True
         self.fields["email"].widget.attrs["readonly"] = True
+
+    def clean_accept_terms_condition(self):
+        accept_terms_condition = self.cleaned_data.get("accept_terms_condition")
+        if not accept_terms_condition:
+            raise ValidationError(_("Debe aceptar los términos y condiciones."))
+        return accept_terms_condition
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if self.instance:
+            cleaned_data["email"] = self.instance.email
+        return cleaned_data
+
+    def save(self, commit: bool = True):
+        external_customer = payment_gateway.update_customer(self.instance)
+        self.instance.external_customer_id = external_customer.id
+
+        return super().save(commit)
 
     class Meta:
         model = CustomerUser

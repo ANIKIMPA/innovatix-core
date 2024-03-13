@@ -1,5 +1,4 @@
 from django import forms
-from django.db.models import Model
 
 
 class CoreModelForm(forms.ModelForm):
@@ -21,12 +20,3 @@ class CoreModelForm(forms.ModelForm):
 
             if self[field_name].errors:
                 field.widget.attrs["class"] += " is-invalid"
-
-    def cleaned_data_with_model_pk(self):
-        user_info = self.cleaned_data.copy()
-        for key, value in user_info.items():
-            if isinstance(value, Model):
-                # Replace model instance with its primary key
-                user_info[key] = value.pk
-
-        return user_info

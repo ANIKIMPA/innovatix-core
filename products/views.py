@@ -5,8 +5,8 @@ from django.db.models.query import QuerySet
 from django.http import Http404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views import View
-from django.views.generic import DetailView, FormView
+from django.views.generic import DetailView
+from django.views.generic.edit import UpdateView
 from innovatix.core.views import CoreListView
 from innovatix.users.forms import CustomerInfoForm
 from innovatix.users.models import CustomerUser
@@ -14,8 +14,7 @@ from products.models import Membership
 from products.services import payment_gateway
 
 
-@method_decorator(login_required, name="dispatch")
-class MembershipInfoView(View):
+class MembershipInfoMixin:
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
         try:
@@ -45,30 +44,11 @@ class MembershipInfoView(View):
         return context
 
 
-class CustomerInfoFormView(MembershipInfoView):
+@method_decorator(login_required, name="dispatch")
+class CustomerInfoUpdateView(MembershipInfoMixin, UpdateView):
+    model = CustomerUser
     form_class = CustomerInfoForm
-    template_name = "products/customer_info_form.html"
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-
-        customer: CustomerUser = self.request.user
-
-        kwargs["initial"] = {
-            "email": customer.email,
-            "phone_number": customer.phone_number,
-            "country": customer.country,
-            "first_name": customer.first_name,
-            "last_name": customer.last_name,
-            "address1": customer.address1,
-            "address2": customer.address2,
-            "city": customer.city,
-            "province": customer.province,
-            "zip": customer.zip,
-            "accept_terms_condition": customer.accept_terms_condition,
-        }
-
-        return kwargs
+    template_name = "products/customeruser_update_form.html"
 
     def get_success_url(self):
         # reverse_lazy with dynamic URL part
@@ -76,9 +56,8 @@ class CustomerInfoFormView(MembershipInfoView):
             "payments:payment-info", kwargs={"slug": self.membership.slug}
         )
 
-    def form_valid(self, form: CustomerInfoForm):
-
-        return super().form_valid(form)
+    def get_object(self, queryset: QuerySet[CustomerUser] | None = None):
+        return self.request.user
 
 
 class MembershipDetailView(DetailView):

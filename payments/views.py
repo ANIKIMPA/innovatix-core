@@ -1,18 +1,24 @@
 import logging
+from typing import Any
 
 from django.conf import settings
-from django.http import Http404
+from django.contrib import messages
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponsePermanentRedirect,
+    HttpResponseRedirect,
+)
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import FormView
 from innovatix.core.views import CoreTemplateView
-from innovatix.geo_territories.models import Country, Province
 from innovatix.users.forms import CustomerInfoForm
-from innovatix.users.models import CustomerUser
 from payments.constants import SUCCEEDED
 from payments.forms import PaymentMethodForm
 from products.services import payment_gateway
-from products.views import MembershipInfoView
+from products.views import MembershipInfoMixin
 
 logger = logging.getLogger("django")
 
@@ -34,55 +40,44 @@ class PaymentSuccessView(CoreTemplateView):
     template_name = "payments/success.html"
 
 
-class PaymentInfoFormView(MembershipInfoView):
+class PaymentInfoFormView(MembershipInfoMixin, FormView):
     form_class = PaymentMethodForm
     template_name = "payments/payment_info_form.html"
     success_url = reverse_lazy("payments:payment-success")
 
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-        try:
-            if "user_info" not in request.session:
-                reverse("products:customer-info", args=[str(self.membership.slug)])
-
-            self.user_info: dict = request.session.get("user_info").copy()
-            self.user_info["country"] = Country.objects.get(
-                pk=self.user_info.get("country")
+    def dispatch(
+        self, request: HttpRequest, *args: Any, **kwargs: dict[str, Any]
+    ) -> HttpResponseRedirect | HttpResponsePermanentRedirect | HttpResponse:
+        if not request.user.is_authenticated:
+            login_url = reverse("account_login")
+            next_url = reverse(
+                "products:customer-info", args=[str(self.membership.slug)]
             )
-            self.user_info["province"] = Province.objects.get(
-                pk=self.user_info.get("province")
-            )
-        except Country.DoesNotExist:
-            raise Http404("No Country matches the given query.")
-        except Province.DoesNotExist:
-            raise Http404("No Province matches the given query.")
+            redirect_url = f"{login_url}?next={next_url}"
+            return redirect(redirect_url)
 
-    def get_context_data(self, **kwargs):
+        if not request.user.external_customer_id:
+            return redirect("products:customer-info", slug=str(self.membership.slug))
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context.update(
             {
-                "user_info": self.user_info,
                 "pg_public_key": settings.STRIPE_PUBLIC_KEY,
             }
         )
         return context
 
-    def form_valid(self, form):
-        payment_method_id = form.cleaned_data["payment_method_id"]
-        customer = None
-
-        # Validate the data in the session.
-        customer_form = CustomerInfoForm(self.user_info)
-        if not customer_form.is_valid():
-            return redirect("products:customer-info", slug=str(self.membership.slug))
+    def form_valid(
+        self, form: PaymentMethodForm
+    ) -> HttpResponseRedirect | HttpResponsePermanentRedirect | HttpResponse:
+        payment_method_id: str = form.cleaned_data["payment_method_id"]
 
         try:
-            customer = payment_gateway.create_customer(
-                CustomerUser(**self.user_info), payment_method_id=payment_method_id
-            )
-
             payment_response = payment_gateway.create_confirm_subscription(
-                customer_id=customer.id,
+                customer_id=self.request.user.external_customer_id,
                 payment_method_id=payment_method_id,
                 membership=self.membership,
                 ip_address=get_client_ip(self.request),
@@ -100,7 +95,6 @@ class PaymentInfoFormView(MembershipInfoView):
                 "error": {"message": getattr(err, "user_message", "An error occurred")},
             }
         except Exception as err:
-            logger.error(f"Failed creating Stripe customer: {err}")
             payment_response = {
                 "status": getattr(err, "http_status", 500),
                 "client_secret": None,
@@ -120,9 +114,6 @@ class PaymentInfoFormView(MembershipInfoView):
             return redirect(
                 f'{self.request.path}?client_secret={payment_response["client_secret"]}'
             )
-
-        if customer and customer.id:
-            payment_gateway.delete_customer(customer.id)
 
         form.add_error(None, payment_response["error"]["message"])
         return self.form_invalid(form)

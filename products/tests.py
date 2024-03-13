@@ -6,13 +6,9 @@ from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
-
 from innovatix.core.tests import BaseTestCase
 from innovatix.geo_territories.utils import get_default_country, get_default_province
-from innovatix.users.utils import (
-    create_fake_customer_user,
-    get_user_info_fake_session_data,
-)
+from innovatix.users.utils import create_fake_customer_user
 from products.admin import UserMembershipAdmin
 from products.models import UserMembership
 from products.tests import create_fake_membership
@@ -148,23 +144,10 @@ class CustomerInfoPageViewTest(BaseTestCase):
     def test_page_loads(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "products/customer_info_form.html")
-
-    def test_form_prepopulated_with_session_data(self):
-        session = self.client.session
-        session["user_info"] = {"first_name": "John", "last_name": "Doe"}
-        session.save()
-
-        response = self.client.get(self.url)
-
-        form = response.context["form"]
-        self.assertEqual(form.initial, session["user_info"])
+        self.assertTemplateUsed(response, "products/customeruser_update_form.html")
 
     def test_valid_form_submission(self):
-        country = get_default_country()
-        province = get_default_province()
-        form_data = get_user_info_fake_session_data(country, province)
-        response = self.client.post(self.url, form_data)
+        response = self.client.post(self.url)
 
         self.assertRedirects(
             response,
@@ -172,6 +155,3 @@ class CustomerInfoPageViewTest(BaseTestCase):
                 "payments:payment-info", kwargs={"slug": self.membership.slug}
             ),
         )
-
-        session = self.client.session
-        self.assertEqual(session["user_info"], form_data)

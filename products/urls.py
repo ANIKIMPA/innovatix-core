@@ -1,6 +1,6 @@
 from django.urls import path
 from products.views import (
-    CustomerInfoFormView,
+    CustomerInfoUpdateView,
     MembershipDetailView,
     MembershipListView,
 )
@@ -15,7 +15,7 @@ urlpatterns = [
     ),
     path(
         "membresias/<slug:slug>/usuario-info/",
-        CustomerInfoFormView.as_view(),
+        CustomerInfoUpdateView.as_view(),
         name="customer-info",
     ),
 ]

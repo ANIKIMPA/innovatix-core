@@ -5,13 +5,10 @@ from django.urls import reverse
 
 from innovatix.core.tests import BaseTestCase
 from innovatix.geo_territories.utils import get_default_country, get_default_province
-from innovatix.users.utils import (
-    create_fake_customer_user,
-    get_user_info_fake_session_data,
-)
+from innovatix.users.utils import create_fake_customer_user
 from payments.constants import SUCCEEDED
 from payments.utils import create_fake_payment, create_fake_payment_method
-from products.tests import create_fake_membership, create_fake_subscription
+from products.utils import create_fake_membership, create_fake_subscription
 
 
 class PaymentMethodModelTest(BaseTestCase):
@@ -62,26 +59,10 @@ class PaymentInfoPageViewTest(BaseTestCase):
         self.country = get_default_country()
         self.province = get_default_province()
 
-        # Initialize session variables
-        self.user_info = get_user_info_fake_session_data(self.country, self.province)
-        session = self.client.session
-        session["user_info"] = self.user_info
-        session.save()
-
     def test_page_loads(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "payments/payment_info_form.html")
-
-    def test_form_prepopulated_with_session_data(self):
-        self.user_info["country"] = self.country
-        self.user_info["province"] = self.province
-        response = self.client.get(
-            reverse("payments:payment-info", kwargs={"slug": self.membership.slug})
-        )
-
-        self.assertIn("user_info", response.context)
-        self.assertEqual(response.context["user_info"], self.user_info)
 
     def _test_response(
         self,

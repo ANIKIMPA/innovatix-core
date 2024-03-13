@@ -6,7 +6,6 @@ from typing import Any
 from django.http import HttpResponse
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.core.services.payment_gateways import CoreStripePaymentGateway
 from products.constants import INITIAL_PAYMENT_PRODUCT_NAME
 from products.models import Membership, UserMembership
@@ -19,7 +18,7 @@ class StripePaymentGateway(CoreStripePaymentGateway):
     Stripe-specific implementation of the Stripe payment gateway.
     """
 
-    TRANSACTION_FEE_PERCENT = 0.029
+    TRANSACTION_FEE_PERCENT = 0.05
     TRANSACTION_FEE_CENTS = 30
 
     def entry_cost_product_id(self) -> str:
@@ -86,7 +85,7 @@ class StripePaymentGateway(CoreStripePaymentGateway):
         customer_id: str,
         payment_method_id: str,
         membership: Membership,
-        **kwargs,
+        **kwargs: dict[str, Any],
     ) -> dict[str, Any]:
         """
         Creates and confirms a subscription for a customer, including a one-time charge.

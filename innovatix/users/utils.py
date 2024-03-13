@@ -76,21 +76,3 @@ def create_fake_contact(**kwargs: Any) -> ContactModel:
     model_params.update(**kwargs)
 
     return create_contact(**model_params)
-
-
-def get_user_info_fake_session_data(country, province, **kwargs):
-    data = {
-        "email": "user.test@example.com",
-        "phone_number": "7872594465",
-        "first_name": "John",
-        "last_name": "Doe",
-        "country": country.pk,
-        "province": province.pk,
-        "address1": "Test street",
-        "address2": "",
-        "city": "Testland",
-        "zip": "00956",
-        "accept_terms_condition": True,
-    }
-    data.update(**kwargs)
-    return data

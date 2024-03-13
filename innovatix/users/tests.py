@@ -15,7 +15,7 @@ from innovatix.users.utils import (
 )
 
 
-class CompanyModelTest(TestCase):
+class CompanyModelTest(BaseTestCase):
     def setUp(self):
         self.company = create_fake_company(
             get_default_province(), get_default_country()
