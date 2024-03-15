@@ -111,7 +111,7 @@
                         <a href="{% provider_login_url provider.id %}?next=/" class="social-btn hover:bg-gray-50">
                             <img src="{% static 'ipasite/assets/images/' %}{{provider.id}}-social-icon.png"
                                 alt="{{provider.name}}" class="w-5" />
-                            {{provider.name}}
+                            {% translate "Continuar con" %} {{provider.name}}
                         </a>
                         {% endfor %}
                         {% endelement %}
