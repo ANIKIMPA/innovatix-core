@@ -7,7 +7,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from innovatix.geo_territories.models import Country, Province
-from innovatix.geo_territories.utils import get_default_country, get_default_province
 from innovatix.users.constants import DEFAULT_COUNTRY_CODE, LANGUAGE_CHOICES
 
 from .base_user import BaseUser, BaseUserManager
@@ -136,13 +135,13 @@ class CustomerUser(BaseUser, PermissionsMixin):
         "geo_territories.Province",
         verbose_name=_("estado"),
         on_delete=models.PROTECT,
-        default=get_default_province,
+        default=55,
     )
     country = models.ForeignKey(
         "geo_territories.Country",
         verbose_name=_("País"),
         on_delete=models.PROTECT,
-        default=get_default_country,
+        default=1,
     )
     tags = models.ManyToManyField(
         "users.Tag",
@@ -173,6 +172,9 @@ class CustomerUser(BaseUser, PermissionsMixin):
     class Meta:
         verbose_name = _("customer")
         verbose_name_plural = _("customers")
+
+    def has_active_subscriptions(self) -> bool:
+        return self.subscriptions.filter(status="active").count() >= 1
 
     def format_phone_number(self):
         country_code = getattr(self.country, "code", DEFAULT_COUNTRY_CODE)

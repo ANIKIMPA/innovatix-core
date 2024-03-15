@@ -18,7 +18,7 @@
     {% if form.non_field_errors %}
     <div class="mb-4">
         <div class="text-red-600 italic">
-            <ul class="error-list bg-red-100 border-l-4 border-red-500 p-1">
+            <ul class="error-list border-l-4 border-red-500 p-1">
                 {% for error in form.non_field_errors %}
                 <li>{{ error }}</li>
                 {% endfor %}
@@ -34,7 +34,7 @@
         {% endif %}
         {% if form.login.errors %}
         <div class="text-red-600 italic">
-            <ul class="error-list bg-red-100 border-l-4 border-red-500 p-1">
+            <ul class="error-list border-l-4 border-red-500 p-1">
                 {% for error in form.login.errors %}
                 <li>{{error}}</li>
                 {% endfor %}
@@ -46,7 +46,7 @@
         {{ form.password }}
         {% if form.password.errors %}
         <div class="text-red-600 italic">
-            <ul class="error-list bg-red-100 border-l-4 border-red-500 p-1">
+            <ul class="error-list border-l-4 border-red-500 p-1">
                 {% for error in form.password.errors %}
                 <li>{{error}}</li>
                 {% endfor %}
@@ -65,7 +65,7 @@
         {% endif %}
         {% if form.remember.errors %}
         <div class="text-red-600 italic">
-            <ul class="error-list bg-red-100 border-l-4 border-red-500 p-1">
+            <ul class="error-list border-l-4 border-red-500 p-1">
                 {% for error in form.remember.errors %}
                 <li>{{error}}</li>
                 {% endfor %}

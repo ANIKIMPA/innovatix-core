@@ -33,6 +33,7 @@ def create_fake_company(province: Province, country: Country, **kwargs: Any) -> 
         "city": "Test City",
         "state": province,
         "country": country,
+        "zip": "12345",
         "phone": "1234567890",
         "email": "test@example.com",
         "website": "http://www.example.com",

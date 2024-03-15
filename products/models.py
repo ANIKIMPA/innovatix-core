@@ -107,10 +107,11 @@ class UserMembership(models.Model):
     external_subscription_id = models.CharField(
         _("stripe ID"), max_length=50, blank=True
     )
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         "users.CustomerUser",
         verbose_name=_("customer"),
         on_delete=models.CASCADE,
+        related_name="subscriptions",
     )
     membership = models.ForeignKey("Membership", on_delete=models.PROTECT)
     date_subscribed = models.DateTimeField(default=timezone.now)

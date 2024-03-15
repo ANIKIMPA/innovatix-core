@@ -75,8 +75,19 @@ class CustomerInfoForm(CoreModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        if self.instance:
-            cleaned_data["email"] = self.instance.email
+
+        if not self.instance:
+            return cleaned_data
+
+        cleaned_data["email"] = self.instance.email
+
+        if self.instance.has_active_subscriptions():
+            raise ValidationError(
+                _(
+                    "Ya tienes una suscripción activa. Contáctanos si deseas hacer cambios."
+                )
+            )
+
         return cleaned_data
 
     def save(self, commit: bool = True):

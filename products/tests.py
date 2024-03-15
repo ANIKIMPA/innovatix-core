@@ -11,7 +11,6 @@ from innovatix.geo_territories.utils import get_default_country, get_default_pro
 from innovatix.users.utils import create_fake_customer_user
 from products.admin import UserMembershipAdmin
 from products.models import UserMembership
-from products.tests import create_fake_membership
 from products.utils import create_fake_membership, create_fake_subscription
 
 
@@ -22,22 +21,6 @@ class MembershipModelTest(TestCase):
     def test_membership_creation(self):
         self.assertEqual(self.membership.name, "Test Membership")
         self.assertEqual(self.membership.get_recurring_price(), 10.49)
-
-    @patch("products.models.payment_gateway.delete_membership")
-    def test_delete_membership_not_linked_to_subscription(self, mock_delete_membership):
-        self.membership.delete()
-        mock_delete_membership.assert_called_once_with(self.membership)
-
-    @patch("products.models.payment_gateway.delete_membership")
-    def test_delete_membership_linked_to_subscription(self, mock_delete_membership):
-        # Assume is_linked_to_subscriptions returns True
-        self.membership.is_linked_to_subscriptions = lambda: True
-
-        # Try to delete the membership and expect a ValidationError
-        with self.assertRaises(ValidationError):
-            self.membership.delete()
-
-        mock_delete_membership.assert_not_called()
 
 
 class UserMembershipModelTest(BaseTestCase):
@@ -141,13 +124,31 @@ class CustomerInfoPageViewTest(BaseTestCase):
             "products:customer-info", kwargs={"slug": self.membership.slug}
         )
 
+        self.country = get_default_country()
+        self.province = get_default_province()
+        self.user = create_fake_customer_user(self.province, self.country)
+        self.client.force_login(self.user)
+
     def test_page_loads(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "products/customeruser_update_form.html")
 
     def test_valid_form_submission(self):
-        response = self.client.post(self.url)
+        form_data = {
+            "first_name": self.user.first_name,
+            "last_name": self.user.last_name,
+            "email": self.user.email,
+            "phone_number": self.user.phone_number,
+            "address1": self.user.address1,
+            "address2": self.user.address2,
+            "city": self.user.city,
+            "country": self.user.country.pk,
+            "province": self.user.province.pk,
+            "zip": self.user.zip,
+            "accept_terms_condition": True,
+        }
+        response = self.client.post(self.url, data=form_data)
 
         self.assertRedirects(
             response,

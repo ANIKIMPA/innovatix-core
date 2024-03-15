@@ -3,7 +3,6 @@ from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
-
 from innovatix.core.tests import BaseTestCase
 from innovatix.geo_territories.utils import get_default_country, get_default_province
 from innovatix.users.forms import ContactForm
@@ -28,7 +27,7 @@ class CompanyModelTest(BaseTestCase):
         self.assertEqual(self.company.state, get_default_province())
         self.assertEqual(self.company.country, get_default_country())
         self.assertEqual(self.company.zip, "12345")
-        self.assertEqual(self.company.phone, "1234567890")
+        self.assertEqual(self.company.phone, "+1 1234567890")
         self.assertEqual(self.company.email, "test@example.com")
         self.assertEqual(self.company.website, "http://www.example.com")
         self.assertEqual(
@@ -96,33 +95,33 @@ class ContactFormTest(TestCase):
         self.data["name"] = ""
         form = ContactForm(self.data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors["name"], ["This field is required."])
+        self.assertEqual(form.errors["name"], [_("This field is required.")])
 
     def test_form_with_invalid_email(self):
         self.data["email"] = "not an email"
         form = ContactForm(self.data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors["email"], ["Enter a valid email address."])
+        self.assertEqual(form.errors["email"], [_("Enter a valid email address.")])
 
     def test_form_with_no_phone_number(self):
         self.data["phone_number"] = ""
         form = ContactForm(self.data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors["phone_number"], ["This field is required."])
+        self.assertEqual(form.errors["phone_number"], [_("This field is required.")])
 
     def test_form_with_invalid_phone_number(self):
         self.data["phone_number"] = "1234567890"
         form = ContactForm(self.data)
         self.assertFalse(form.is_valid())
         self.assertEqual(
-            form.errors["phone_number"], ["The phone number entered is not valid."]
+            form.errors["phone_number"], [_("The phone number entered is not valid.")]
         )
 
     def test_form_with_no_message(self):
         self.data["message"] = ""
         form = ContactForm(self.data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors["message"], ["This field is required."])
+        self.assertEqual(form.errors["message"], [_("This field is required.")])
 
 
 class ContactModelTest(TestCase):

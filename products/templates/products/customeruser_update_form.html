@@ -20,6 +20,17 @@
                 <!-- User Information Form -->
                 <h2>Información del Usuario</h2>
                 <div class="row">
+                    {% if form.non_field_errors %}
+                    <div class="my-3 col-lg-12">
+                        <div class="text-danger fst-italic">
+                            <ul class="error-list">
+                                {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
                     <div class="mb-4 col-lg-12">
                         <div class="form-floating">
                             {{form.email}}

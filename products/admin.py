@@ -1,4 +1,5 @@
 import statistics
+from typing import Any
 
 from django.conf import settings
 from django.contrib import admin, messages
@@ -7,13 +8,15 @@ from django.contrib.admin.utils import unquote
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
 from django.db.models.query import QuerySet
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.http.request import HttpRequest
 from django.shortcuts import render
 from django.template.response import TemplateResponse
 from django.urls import path, reverse
+from django.urls.resolvers import URLPattern
 from django.utils.decorators import method_decorator
 from django.utils.html import escape, format_html
+from django.utils.safestring import SafeText
 from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
@@ -87,17 +90,23 @@ class UserMembershipAdmin(admin.ModelAdmin):
     def membership_name(self, obj):
         return obj.membership.name
 
-    def has_delete_permission(self, request, obj=None):
+    def has_delete_permission(
+        self, request: HttpRequest, obj: UserMembership | None = None
+    ) -> bool:
         return False
 
     def has_add_permission(self, request: HttpRequest) -> bool:
         return False
 
-    def has_change_permission(self, request: HttpRequest, obj=None) -> bool:
+    def has_change_permission(
+        self, request: HttpRequest, obj: UserMembership | None = None
+    ) -> bool:
         return False
 
     @admin.display(description="Update price for selected subscriptions")
-    def update_price(self, request, queryset: QuerySet[UserMembership]):
+    def update_price(
+        self, request: HttpRequest, queryset: QuerySet[UserMembership]
+    ) -> HttpResponseRedirect | HttpResponse:
         # Sets the initial value of "new_price" to the mode (most frequently occurring value)
         # of the recurring prices from the selected queryset of instances.
         initial = {
@@ -226,19 +235,19 @@ class MembershipAdmin(CoreAdmin, SummernoteModelAdmin):
     ordering = ("name",)
 
     @admin.display(description="Recurring price", ordering="recurring_price")
-    def display_recurring_price(self, obj):
+    def display_recurring_price(self, obj: Membership):
         return obj.get_display_recurring_price()
 
     @admin.display(description="Entry cost", ordering="entry_cost")
-    def display_entry_cost(self, obj):
+    def display_entry_cost(self, obj: Membership) -> Any:
         return obj.get_display_entry_cost()
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         queryset = super().get_queryset(request)
         return queryset.annotate(_subscription_count=Count("usermembership"))
 
     @admin.display(description="Subscriptions", ordering="_subscription_count")
-    def subscription_count_link(self, obj):
+    def subscription_count_link(self, obj) -> SafeText:
         count = obj._subscription_count
         url = (
             reverse("admin:products_usermembership_changelist")
@@ -248,7 +257,9 @@ class MembershipAdmin(CoreAdmin, SummernoteModelAdmin):
             '<a href="{}" title="Show subscriptions">{} active</a>', url, count
         )
 
-    def get_custom_readonly_fields(self, request, obj=None):
+    def get_custom_readonly_fields(
+        self, request: HttpRequest, obj: Membership | None = None
+    ) -> list[Any] | list[dict[str, str]]:
         if not obj:
             return []
 
@@ -271,7 +282,9 @@ class MembershipAdmin(CoreAdmin, SummernoteModelAdmin):
             },
         ]
 
-    def get_readonly_fields(self, request, obj=None):
+    def get_readonly_fields(
+        self, request: HttpRequest, obj: Membership | None = None
+    ) -> list[Any] | list[str]:
         if not obj:
             return []
 
@@ -280,7 +293,7 @@ class MembershipAdmin(CoreAdmin, SummernoteModelAdmin):
             "subscription_count_link",
         ]
 
-    def get_urls(self):
+    def get_urls(self) -> list[URLPattern]:
         return [
             path(
                 "<id>/prices/",
@@ -289,13 +302,22 @@ class MembershipAdmin(CoreAdmin, SummernoteModelAdmin):
             ),
         ] + super().get_urls()
 
-    def has_delete_permission(self, request, obj=None):
+    def has_delete_permission(
+        self, request: HttpRequest, obj: Membership | None = None
+    ) -> bool:
         if obj:
             return not obj.is_linked_to_subscriptions()
         return super().has_delete_permission(request, obj)
 
+    def delete_model(self, request: HttpRequest, obj: Membership) -> None:
+        # Call the delete_membership method before deleting the object
+        payment_gateway.delete_membership(obj)
+        super().delete_model(request, obj)
+
     @sensitive_post_parameters_m
-    def membership_change_price(self, request, id, form_url=""):
+    def membership_change_price(
+        self, request: HttpRequest, id: str, form_url: str = ""
+    ) -> HttpResponseRedirect | TemplateResponse:
         membership = self.get_object(request, unquote(id))
 
         if not self.has_change_permission(request, membership):
