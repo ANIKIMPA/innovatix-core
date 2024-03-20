@@ -120,6 +120,22 @@ class CompanyAddForm(ModelForm):
         self.fields["preferences"].initial = (
             "Frecuencia (e.g. 'Diario', 'Dos veces por semana'): \n\nDías de la semana: \n\nHorario: "
         )
+        self.fields[
+            "description"
+        ].initial = """
+        Categoría de empresa: [Inserte aquí la categoría de empresa, por ejemplo, tecnología, moda, atención médica, etc.]
+
+        Información básica:
+        1. Productos/servicios clave: [enumere brevemente los productos o servicios clave]
+        2. Público objetivo: [Describa el público objetivo: grupo de edad, intereses, ubicación geográfica, etc.]
+        3. Mensaje central: [Inserte un mensaje o tema clave que desee transmitir, por ejemplo, innovación, sostenibilidad, lujo, asequibilidad, etc.]
+
+        Aspectos destacados recientes (opcional):
+        - [Cualquier logro reciente, lanzamiento de producto, evento o noticia relacionada con la empresa]
+
+        Instrucciones especiales (opcional):
+        - [Cualquier requisito específico para la publicación: tono, estilo, llamado a la acción, etc.]
+        """
 
 
 class AccountLoginForm(LoginForm):

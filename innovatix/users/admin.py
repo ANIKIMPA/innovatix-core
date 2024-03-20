@@ -42,7 +42,7 @@ class ContactAdmin(admin.ModelAdmin):
 
 
 @admin.register(Tag)
-class CoreTagAdmin(admin.ModelAdmin):
+class TagAdmin(admin.ModelAdmin):
     list_display = ("text",)
     ordering = ["text"]
     search_fields = ["text"]
@@ -66,7 +66,8 @@ class CustomerUserAdmin(UserAdmin):
                     "first_name",
                     "last_name",
                     "phone_number",
-                )
+                ),
+                "classes": ("collapse",),
             },
         ),
         (
@@ -80,7 +81,8 @@ class CustomerUserAdmin(UserAdmin):
                     "city",
                     "province",
                     "zip",
-                )
+                ),
+                "classes": ("collapse",),
             },
         ),
         (
@@ -91,15 +93,31 @@ class CustomerUserAdmin(UserAdmin):
                     "is_staff",
                     "is_superuser",
                     "user_permissions",
-                )
+                ),
+                "classes": ("collapse",),
             },
         ),
         (
             _("Marketing settings"),
-            {"fields": ("accept_email_marketing", "accept_sms_marketing")},
+            {
+                "fields": ("accept_email_marketing", "accept_sms_marketing"),
+                "classes": ("collapse",),
+            },
         ),
-        (_("Other info"), {"fields": ("tags", "notes")}),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (
+            _("Other info"),
+            {
+                "fields": ("tags", "notes"),
+                "classes": ("collapse",),
+            },
+        ),
+        (
+            _("Important dates"),
+            {
+                "fields": ("last_login", "date_joined"),
+                "classes": ("collapse",),
+            },
+        ),
     )
     add_fieldsets = (
         (

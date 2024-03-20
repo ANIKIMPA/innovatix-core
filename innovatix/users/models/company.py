@@ -2,7 +2,6 @@ from typing import Any
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
 from innovatix.core.services.phone_number_service import PhoneNumberService
 from innovatix.geo_territories.utils import get_default_country
 
