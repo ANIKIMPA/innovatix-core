@@ -1,5 +1,3 @@
-from typing import Any
-
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.db.models import CharField, Value
@@ -9,6 +7,8 @@ from django.utils.translation import gettext_lazy as _
 from innovatix.core.admin import CoreAdmin
 from innovatix.users.forms import CustomerUserChangeForm, CustomerUserCreationForm
 from innovatix.users.models import Company, ContactModel, CustomerUser, Tag
+from payments.admin import PaymentMethodInline
+from products.admin import SubscriptionAdminInline
 
 from .forms import CompanyAddForm
 
@@ -50,6 +50,10 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(CustomerUser)
 class CustomerUserAdmin(UserAdmin):
+    inlines = (
+        SubscriptionAdminInline,
+        PaymentMethodInline,
+    )
     # Made 'add_form_template = None' to remove the default message on the admin template.
     add_form_template = None
     add_form = CustomerUserCreationForm

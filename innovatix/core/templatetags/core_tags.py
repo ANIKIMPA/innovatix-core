@@ -1,5 +1,4 @@
 from django import template
-
 from innovatix.core.services.phone_number_service import PhoneNumberService
 from innovatix.users.constants import DEFAULT_COUNTRY_CODE
 
@@ -7,16 +6,16 @@ register = template.Library()
 
 
 @register.filter
-def cents_to_dollars(value):
+def cents_to_dollars(value: float) -> float:
     return value / 100
 
 
 @register.filter
-def dollar_format(value):
+def dollar_format(value: float) -> str:
     try:
         return "${:,.2f}".format(value)
     except ValueError:
-        return value
+        return str(value)
 
 
 @register.simple_tag(takes_context=True)

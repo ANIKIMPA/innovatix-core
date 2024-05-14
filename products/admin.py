@@ -37,7 +37,7 @@ from products.services import payment_gateway
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 
 
-class UserMembershipInline(admin.StackedInline):
+class SubscriptionAdminInline(admin.StackedInline):
     show_change_link = True
     model = UserMembership
     extra = 0
