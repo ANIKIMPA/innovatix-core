@@ -111,7 +111,6 @@ class UserMembership(models.Model):
         "users.CustomerUser",
         verbose_name=_("customer"),
         on_delete=models.CASCADE,
-        related_name="subscriptions",
     )
     membership = models.ForeignKey("Membership", on_delete=models.PROTECT)
     date_subscribed = models.DateTimeField(default=timezone.now)
