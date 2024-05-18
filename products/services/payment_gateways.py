@@ -3,9 +3,11 @@ import logging
 import math
 from typing import Any
 
+import stripe
 from django.http import HttpResponse
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
+
 from innovatix.core.services.payment_gateways import CoreStripePaymentGateway
 from products.constants import INITIAL_PAYMENT_PRODUCT_NAME
 from products.models import Membership, UserMembership
@@ -186,7 +188,7 @@ class StripePaymentGateway(CoreStripePaymentGateway):
                 },
             }
 
-    def create_initial_payment_product(self, description: str):
+    def create_initial_payment_product(self, description: str) -> stripe.Product:
         try:
             product = self.stripe.Product.create(
                 name=INITIAL_PAYMENT_PRODUCT_NAME,
@@ -198,7 +200,7 @@ class StripePaymentGateway(CoreStripePaymentGateway):
             logger.error(f"Failed creating Stripe entry product: {err}")
             raise Exception(_(f"Failed creating Stripe entry product: {err}"))
 
-    def create_membership(self, membership: Membership):
+    def create_membership(self, membership: Membership) -> stripe.Product:
         try:
             product = self.stripe.Product.create(
                 name=membership.name,
@@ -215,7 +217,7 @@ class StripePaymentGateway(CoreStripePaymentGateway):
             logger.error(f"Failed creating Stripe membership: {err}")
             raise Exception(_(f"Failed creating Stripe membership: {err}"))
 
-    def update_membership(self, membership: Membership):
+    def update_membership(self, membership: Membership) -> stripe.Product:
         try:
             return self.stripe.Product.modify(
                 membership.external_product_id,
