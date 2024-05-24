@@ -1,4 +1,7 @@
+from typing import Any
+
 from django import template
+
 from innovatix.core.services.phone_number_service import PhoneNumberService
 from innovatix.users.constants import DEFAULT_COUNTRY_CODE
 
@@ -33,12 +36,12 @@ def mark_if_active_link(context, active_page):
 
 
 @register.filter
-def to_dict(instance):
+def to_dict(instance: Any):
     return instance.__dict__
 
 
 @register.filter
-def dir(instance):
+def dir(instance: Any):
     return dir(instance)
 
 
