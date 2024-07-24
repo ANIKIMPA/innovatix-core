@@ -5,8 +5,9 @@ from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
 from innovatix.core.services.phone_number_service import PhoneNumberService
-from innovatix.users.constants import DEFAULT_COUNTRY_CODE
+from innovatix.geo_territories.constants import DEFAULT_COUNTRY_CODE
 
 
 class BaseUserManager(UserManager):

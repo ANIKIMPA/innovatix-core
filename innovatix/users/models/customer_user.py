@@ -6,8 +6,10 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
+from innovatix.geo_territories.constants import DEFAULT_COUNTRY_CODE
 from innovatix.geo_territories.models import Country, Province
-from innovatix.users.constants import DEFAULT_COUNTRY_CODE, LANGUAGE_CHOICES
+from innovatix.users.constants import LANGUAGE_CHOICES
 
 from .base_user import BaseUser, BaseUserManager
 from .company import Company

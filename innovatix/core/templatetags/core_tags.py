@@ -3,7 +3,7 @@ from typing import Any
 from django import template
 
 from innovatix.core.services.phone_number_service import PhoneNumberService
-from innovatix.users.constants import DEFAULT_COUNTRY_CODE
+from innovatix.geo_territories.constants import DEFAULT_COUNTRY_CODE
 
 register = template.Library()
 

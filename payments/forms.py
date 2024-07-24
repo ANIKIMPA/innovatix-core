@@ -1,7 +1,4 @@
-from decimal import Decimal
-
 from django import forms
-from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 
 from innovatix.core.forms import CoreModelForm

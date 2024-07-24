@@ -1,7 +1,7 @@
 import phonenumbers
 from django.core.exceptions import ValidationError
 
-from innovatix.users.constants import DEFAULT_COUNTRY_CODE
+from innovatix.geo_territories.constants import DEFAULT_COUNTRY_CODE
 
 
 class PhoneNumberService:

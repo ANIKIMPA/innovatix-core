@@ -1,8 +1,11 @@
 import logging
 from typing import Any
 
+from innovatix.geo_territories.constants import (
+    DEFAULT_COUNTRY_CODE,
+    DEFAULT_PROVINCE_CODE,
+)
 from innovatix.geo_territories.models import Country, Province
-from innovatix.users.constants import DEFAULT_COUNTRY_CODE, DEFAULT_PROVINCE_CODE
 
 logger = logging.getLogger("django")
 

@@ -2,7 +2,6 @@ import logging
 from typing import Any
 
 from django.conf import settings
-from django.contrib import messages
 from django.http import (
     HttpRequest,
     HttpResponse,
@@ -13,8 +12,8 @@ from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
+
 from innovatix.core.views import CoreTemplateView
-from innovatix.users.forms import CustomerInfoForm
 from payments.constants import SUCCEEDED
 from payments.forms import PaymentMethodForm
 from products.services import payment_gateway
